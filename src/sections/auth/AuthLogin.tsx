@@ -4,126 +4,153 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from 'src/contexts/AuthContext';
 import { useAppNavigation } from 'src/routes/hooks';
-import { Link } from 'react-router-dom';
-import { PATHS } from 'src/routes/path';
+import { Link as RouterLink } from 'react-router-dom';
+// import { PATHS } from 'src/routes/path';
+
+import { emailSchema, passwordSchema } from 'src/utils/validationSchema';
+import Alert from '@mui/material/Alert';
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
+import FormHelperText from '@mui/material/FormHelperText';
+import InputAdornment from '@mui/material/InputAdornment';
+import InputLabel from '@mui/material/InputLabel';
+import MuiLink from '@mui/material/Link';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
+import { IconEye, IconEyeOff } from '@tabler/icons-react';
+import { CommonAuthComponentProps } from 'src/types/auth';
+
+interface LoginFormInput {
+    email: string;
+    password: string;
+}
+
+/***************************  AUTH - LOGIN  ***************************/
 
 // Schéma de validation
 const loginSchema = z.object({
-    email: z.string().email('Email invalide'),
-    password: z.string().min(6, 'Le mot de passe doit contenir au moins 6 caractères')
+    email: z.string().email('Invalid email'),
+    password: z.string().min(6, 'Password must be at least 6 characters')
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
-export default function AuthLogin() {
+const commonIconProps = { size: 20, stroke: 1.5 };
+
+export default function AuthLogin({ inputSx }: CommonAuthComponentProps) {
     const { login } = useAuth();
     const { navigateToDashboard } = useAppNavigation();
-    const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const [isProcessing, setIsProcessing] = useState(false);
+    const [loginError, setLoginError] = useState('');
 
-    const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>({
-        resolver: zodResolver(loginSchema)
+    // Initialize react-hook-form
+    const {
+        register,
+        handleSubmit,
+        // reset,
+        formState: { errors }
+    } = useForm<LoginFormInput>({
+        resolver: zodResolver(loginSchema),
+        defaultValues: { email: 'super_admin@saasable.io', password: 'Super@123' }
     });
 
     const onSubmit = async (data: LoginFormData) => {
         try {
-            setError('');
-            setLoading(true);
+            setLoginError('');
+            setIsProcessing(true);
             await login(data.email, data.password);
             navigateToDashboard();
         } catch (err) {
-            setError('Échec de la connexion. Vérifiez vos identifiants.');
+            setLoginError('Login failed. Please check your credentials.');
             console.error(err);
         } finally {
-            setLoading(false);
+            setIsProcessing(false);
         }
     };
 
     return (
         <>
-            <h2 className="text-2xl font-bold text-center mb-6">Connexion</h2>
-
-            {error && (
-                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
-                    <span className="block sm:inline">{error}</span>
-                </div>
-            )}
+            {/* <Stack direction="row" sx={{ gap: 1, mb: 2 }}>
+                {userCredentials.map((credential) => (
+                    <Button
+                        key={credential.title}
+                        variant="outlined"
+                        color="secondary"
+                        sx={{ flex: 1 }}
+                        onClick={() => reset({ email: credential.email, password: credential.password })}
+                    >
+                        {credential.title}
+                    </Button>
+                ))}
+            </Stack> */}
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                        Email
-                    </label>
-                    <div className="mt-1">
-                        <input
-                            id="email"
-                            type="email"
-                            autoComplete="email"
-                            className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            {...register('email')}
+                <Stack gap={2}>
+                    <Box>
+                        <InputLabel>Email</InputLabel>
+                        <OutlinedInput
+                            {...register('email', emailSchema)}
+                            placeholder="example@saasable.io"
+                            fullWidth
+                            error={Boolean(errors.email)}
+                            sx={inputSx}
                         />
-                        {errors.email && (
-                            <p className="mt-2 text-sm text-red-600">{errors.email.message}</p>
-                        )}
-                    </div>
-                </div>
+                        {errors.email?.message && <FormHelperText error>{errors.email.message}</FormHelperText>}
+                    </Box>
 
-                <div>
-                    <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                        Mot de passe
-                    </label>
-                    <div className="mt-1">
-                        <input
-                            id="password"
-                            type="password"
-                            autoComplete="current-password"
-                            className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            {...register('password')}
+                    <Box>
+                        <InputLabel>Password</InputLabel>
+                        <OutlinedInput
+                            {...register('password', passwordSchema)}
+                            type={isPasswordVisible ? 'text' : 'password'}
+                            placeholder="Enter your password"
+                            fullWidth
+                            error={Boolean(errors.password)}
+                            endAdornment={
+                                <InputAdornment
+                                    position="end"
+                                    sx={{ cursor: 'pointer', WebkitTapHighlightColor: 'transparent' }}
+                                    onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+                                >
+                                    {isPasswordVisible ? <IconEye {...commonIconProps} /> : <IconEyeOff {...commonIconProps} />}
+                                </InputAdornment>
+                            }
+                            sx={inputSx}
                         />
-                        {errors.password && (
-                            <p className="mt-2 text-sm text-red-600">{errors.password.message}</p>
-                        )}
-                    </div>
-                </div>
+                        <Stack direction="row" alignItems="center" justifyContent={errors.password ? 'space-between' : 'flex-end'} width={1}>
+                            {errors.password?.message && <FormHelperText error>{errors.password.message}</FormHelperText>}
+                            <MuiLink
+                                component={RouterLink}
+                                to="/forgot-password"
+                                underline="hover"
+                                variant="caption"
+                                sx={{ '&:hover': { color: 'primary.dark' }, mt: 0.75 }}
+                            >
+                                Forgot Password?
+                            </MuiLink>
+                        </Stack>
+                    </Box>
+                </Stack>
 
-                <div className="flex items-center justify-between">
-                    <div className="text-sm">
-                        <Link to={PATHS.FORGOT_PASSWORD} className="font-medium text-indigo-600 hover:text-indigo-500">
-                            Mot de passe oublié?
-                        </Link>
-                    </div>
-                </div>
+                <Button
+                    type="submit"
+                    color="primary"
+                    variant="contained"
+                    disabled={isProcessing}
+                    endIcon={isProcessing && <CircularProgress color="secondary" size={16} />}
+                    sx={{ minWidth: 120, mt: { xs: 1, sm: 4 }, '& .MuiButton-endIcon': { ml: 1 } }}
+                >
+                    Sign In
+                </Button>
 
-                <div>
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
-                    >
-                        {loading ? 'Connexion en cours...' : 'Se connecter'}
-                    </button>
-                </div>
+                {loginError && (
+                    <Alert sx={{ mt: 2 }} severity="error" variant="filled" icon={false}>
+                        {loginError}
+                    </Alert>
+                )}
             </form>
-
-            <div className="mt-6">
-                <div className="relative">
-                    <div className="absolute inset-0 flex items-center">
-                        <div className="w-full border-t border-gray-300" />
-                    </div>
-                    <div className="relative flex justify-center text-sm">
-                        <span className="px-2 bg-white text-gray-500">Ou</span>
-                    </div>
-                </div>
-
-                <div className="mt-6 text-center">
-                    <p className="text-sm text-gray-600">
-                        Vous n'avez pas de compte?{' '}
-                        <Link to={PATHS.REGISTER} className="font-medium text-indigo-600 hover:text-indigo-500">
-                            S'inscrire
-                        </Link>
-                    </p>
-                </div>
-            </div>
         </>
     );
 }
