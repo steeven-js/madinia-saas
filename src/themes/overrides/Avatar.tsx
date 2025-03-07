@@ -3,7 +3,7 @@ import { Palette, PaletteColor, Theme } from '@mui/material/styles';
 import { AvatarProps } from '@mui/material/Avatar';
 
 // @project
-import { AvatarSize } from '@/enum';
+import { AvatarSize } from 'src/enum';
 
 // @assets
 import { IconUser } from '@tabler/icons-react';

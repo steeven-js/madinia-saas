@@ -1,11 +1,5 @@
-// @next
-import { Archivo, Figtree, Roboto } from 'next/font/google';
-
 // @project
 import { AuthType } from 'src/enum';
-
-// @types
-import { ConfigProps } from 'src/types/config';
 
 /***************************  THEME CONSTANT  ***************************/
 
@@ -20,13 +14,7 @@ export const MINI_DRAWER_WIDTH = 76 + 1; // 1px - for right-side border
 export const AUTH_USER_KEY = 'auth-user';
 export const AUTH_PROVIDER: AuthType = AuthType.MOCK;
 
-/***************************  THEME ENUM  ***************************/
-
-export enum Themes {
-  THEME_CRM = 'crm',
-  THEME_AI = 'ai',
-  THEME_HOSTING = 'hosting'
-}
+/***************************  THEME ENUMS  ***************************/
 
 export enum ThemeMode {
   LIGHT = 'light',
@@ -38,6 +26,15 @@ export enum ThemeDirection {
   RTL = 'rtl'
 }
 
+export enum Themes {
+  DEFAULT = 'default',
+  PURPLE = 'purple',
+  BLUE = 'blue',
+  GREEN = 'green',
+  ORANGE = 'orange',
+  RED = 'red'
+}
+
 export enum ThemeI18n {
   EN = 'en',
   FR = 'fr',
@@ -47,11 +44,10 @@ export enum ThemeI18n {
 
 /***************************  CONFIG  ***************************/
 
-const config: ConfigProps = {
-  currentTheme: Themes.THEME_HOSTING,
+const config = {
   mode: ThemeMode.LIGHT,
   themeDirection: ThemeDirection.LTR,
-  miniDrawer: false,
+  currentTheme: Themes.DEFAULT,
   i18n: ThemeI18n.EN
 };
 
@@ -59,10 +55,7 @@ export default config;
 
 /***************************  THEME - FONT FAMILY  ***************************/
 
-const fontRobot = Roboto({ subsets: ['latin'], display: 'swap', weight: ['100', '300', '400', '500', '700', '900'] });
-const fontArchivo = Archivo({ subsets: ['latin'], display: 'swap', weight: ['400', '500', '600', '700'] });
-const fontFigtree = Figtree({ subsets: ['latin'], display: 'swap', weight: ['400', '500', '600', '700'] });
-
-export const FONT_ROBOTO: string = fontRobot.style.fontFamily;
-export const FONT_ARCHIVO: string = fontArchivo.style.fontFamily;
-export const FONT_FIGTREE: string = fontFigtree.style.fontFamily;
+// Remplacer les polices Next.js par des polices standard
+export const FONT_ROBOTO: string = '"Roboto", sans-serif';
+export const FONT_ARCHIVO: string = '"Archivo", sans-serif';
+export const FONT_FIGTREE: string = '"Figtree", sans-serif';

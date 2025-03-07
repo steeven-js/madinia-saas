@@ -3,8 +3,8 @@ import { Palette, PaletteColor, Theme } from '@mui/material/styles';
 import { CheckboxProps } from '@mui/material/Checkbox';
 
 // @project
-import { ThemeDirection, ThemeMode } from '@/config';
-import { generateFocusStyle } from '@/utils/generateFocusStyle';
+import { ThemeDirection, ThemeMode } from 'src/config';
+import { generateFocusStyle } from 'src/utils/generateFocusStyle';
 
 // @assets
 import { IconSquare, IconSquareCheckFilled, IconSquareMinusFilled } from '@tabler/icons-react';

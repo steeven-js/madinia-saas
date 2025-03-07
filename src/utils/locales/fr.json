@@ -1,0 +1,13 @@
+{
+  "dashboard": "Tableau de bord",
+  "analytics": "Analytique",
+  "statistics": "Statistiques",
+  "data": "Données",
+  "settings": "Paramètres",
+  "profile": "Profil",
+  "logout": "Déconnexion",
+  "login": "Connexion",
+  "register": "S'inscrire",
+  "error": "Erreur",
+  "home": "Accueil"
+} 

@@ -3,8 +3,8 @@ import { alpha, Palette, PaletteColor, Theme } from '@mui/material/styles';
 import { ChipProps } from '@mui/material/Chip';
 
 // @project
-import { ChipIconPosition } from '@/enum';
-import { generateFocusStyle } from '@/utils/generateFocusStyle';
+import { ChipIconPosition } from 'src/enum';
+import { generateFocusStyle } from 'src/utils/generateFocusStyle';
 
 // @assets
 import { IconX } from '@tabler/icons-react';

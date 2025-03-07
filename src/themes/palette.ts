@@ -2,7 +2,7 @@
 import { alpha, PaletteOptions } from '@mui/material/styles';
 
 // @project
-import { ThemeMode } from '@/config';
+import { ThemeMode } from 'src/config';
 
 /***************************  DEFAULT - PALETTE  ***************************/
 

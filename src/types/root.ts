@@ -1,5 +1,7 @@
 import { ReactNode } from 'react';
 
+// ==============================|| TYPES - ROOT ||============================== //
+
 export interface ChildrenProps {
   children: ReactNode;
 }

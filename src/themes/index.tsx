@@ -16,7 +16,7 @@ import typography from './typography';
 import useConfig from 'src/hooks/useConfig';
 
 // @types
-import { ChildrenProps } from '../types/root';
+import { ChildrenProps } from 'src/types/root';
 
 /*************************** DEFAULT THEME - MAIN ***************************/
 

@@ -3,7 +3,7 @@ import { alpha, Palette, PaletteColor, Theme } from '@mui/material/styles';
 import { ButtonProps } from '@mui/material/Button';
 
 // @project
-import { generateFocusStyle } from '@/utils/generateFocusStyle';
+import { generateFocusStyle } from 'src/utils/generateFocusStyle';
 
 // Define the list of colors that the Radio component will support
 const colors: NonNullable<ButtonProps['color']>[] = ['primary', 'secondary', 'success', 'error', 'warning', 'info'];

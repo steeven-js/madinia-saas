@@ -2,7 +2,7 @@
 import { alpha, Palette, PaletteColor, Theme } from '@mui/material/styles';
 
 // @project
-import { generateFocusStyle } from '@/utils/generateFocusStyle';
+import { generateFocusStyle } from 'src/utils/generateFocusStyle';
 
 type IconButtonColor = 'primary' | 'secondary' | 'success' | 'error' | 'warning' | 'info';
 

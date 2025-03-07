@@ -3,7 +3,7 @@ import { alpha, Theme } from '@mui/material/styles';
 import { TabsProps } from '@mui/material/Tabs';
 
 // @project
-import { TabsType } from '@/enum';
+import { TabsType } from 'src/enum';
 
 const segmentedBorderRadius = 8;
 

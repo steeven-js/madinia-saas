@@ -2,7 +2,7 @@
 import { Theme } from '@mui/material/styles';
 
 // @project
-import { FONT_ARCHIVO } from '@/config';
+import { FONT_ARCHIVO } from 'src/config';
 
 /***************************  DEFAULT - TYPOGRAPHY  ***************************/
 

@@ -1,0 +1,13 @@
+{
+  "dashboard": "仪表板",
+  "analytics": "分析",
+  "statistics": "统计",
+  "data": "数据",
+  "settings": "设置",
+  "profile": "个人资料",
+  "logout": "登出",
+  "login": "登录",
+  "register": "注册",
+  "error": "错误",
+  "home": "首页"
+} 

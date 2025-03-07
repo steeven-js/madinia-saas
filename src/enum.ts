@@ -74,5 +74,8 @@ export enum AuthRole {
 /** Auth type enum */
 export enum AuthType {
   MOCK = 'mock',
-  SUPABASE = 'supabase'
+  JWT = 'jwt',
+  AUTH0 = 'auth0',
+  FIREBASE = 'firebase',
+  AMPLIFY = 'amplify'
 }

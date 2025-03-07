@@ -4,7 +4,7 @@ import { RadioProps } from '@mui/material/Radio';
 import Box from '@mui/material/Box';
 
 // @project
-import { generateFocusStyle } from '@/utils/generateFocusStyle';
+import { generateFocusStyle } from 'src/utils/generateFocusStyle';
 
 // Define the list of colors that the Radio component will support
 const colors: NonNullable<RadioProps['color']>[] = ['primary', 'secondary', 'success', 'error', 'warning', 'info'];

@@ -1,21 +1,14 @@
 // @project
-import { ThemeDirection, ThemeI18n, ThemeMode, Themes } from '@/config';
+import { ThemeDirection, ThemeMode, Themes, ThemeI18n } from 'src/config';
 
-export interface ConfigProps {
-  currentTheme: Themes;
-  themeDirection: ThemeDirection;
-  mode: ThemeMode;
-  miniDrawer: boolean;
-  i18n: ThemeI18n;
-}
+// ==============================|| TYPES - CONFIG ||============================== //
 
-export type CustomizationProps = {
-  currentTheme: Themes;
-  themeDirection: ThemeDirection;
+export interface CustomizationProps {
   mode: ThemeMode;
-  miniDrawer: boolean;
+  themeDirection: ThemeDirection;
+  currentTheme: Themes;
   i18n: ThemeI18n;
-  onChangeCurrentTheme: (direction: Themes) => void;
+  onChangeCurrentTheme: (theme: Themes) => void;
   onChangeThemeDirection: (direction: ThemeDirection) => void;
   onChangeThemeMode: (mode: ThemeMode) => void;
-};
+}
