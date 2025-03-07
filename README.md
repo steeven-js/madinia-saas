@@ -52,3 +52,7 @@ export default tseslint.config({
   },
 })
 ```
+
+node scripts/create-users-with-roles.js
+
+node scripts/check-users-roles.js
