@@ -26,6 +26,13 @@ interface LoginFormInput {
     password: string;
 }
 
+// Mock user credentials
+const userCredentials = [
+    { title: 'Super Admin', email: 'super_admin@gmail.com', password: 'password' },
+    { title: 'Admin', email: 'admin_test@gmail.com', password: 'password' },
+    { title: 'User', email: 'user_test@gmail.com', password: 'password' }
+];
+
 /***************************  AUTH - LOGIN  ***************************/
 
 // Schéma de validation
@@ -49,7 +56,7 @@ export default function AuthLogin({ inputSx }: CommonAuthComponentProps) {
     const {
         register,
         handleSubmit,
-        // reset,
+        reset,
         formState: { errors }
     } = useForm<LoginFormInput>({
         resolver: zodResolver(loginSchema),
@@ -72,7 +79,7 @@ export default function AuthLogin({ inputSx }: CommonAuthComponentProps) {
 
     return (
         <>
-            {/* <Stack direction="row" sx={{ gap: 1, mb: 2 }}>
+            <Stack direction="row" sx={{ gap: 1, mb: 2 }}>
                 {userCredentials.map((credential) => (
                     <Button
                         key={credential.title}
@@ -84,7 +91,7 @@ export default function AuthLogin({ inputSx }: CommonAuthComponentProps) {
                         {credential.title}
                     </Button>
                 ))}
-            </Stack> */}
+            </Stack>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 <Stack gap={2}>
