@@ -1,0 +1,22 @@
+import { StrictMode, Suspense } from 'react'
+import { createRoot } from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
+
+import './index.css'
+
+import LoadingSpinner from 'src/components/LoadingSpinner'
+
+import App from './App'
+
+
+const root = createRoot(document.getElementById('root')!)
+
+root.render(
+  <StrictMode>
+    <BrowserRouter>
+      <Suspense fallback={<LoadingSpinner size="lg" />}>
+        <App />
+      </Suspense>
+    </BrowserRouter>
+  </StrictMode>
+)
