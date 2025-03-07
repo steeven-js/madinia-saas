@@ -2,7 +2,7 @@
 import { SxProps } from '@mui/material/styles';
 
 //@project
-import { AuthRole, SocialTypes } from '@/enum';
+import { AuthRole, SocialTypes } from 'src/enum';
 
 export interface AuthSocialProps {
   type?: SocialTypes;

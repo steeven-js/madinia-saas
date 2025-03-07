@@ -1,5 +1,5 @@
 // @data
-import { CountryType } from '@/data/countries';
+import { CountryType } from 'src/data/countries';
 
 // @third-party
 import { Control, FieldValues } from 'react-hook-form';

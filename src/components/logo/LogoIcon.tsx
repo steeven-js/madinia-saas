@@ -6,7 +6,7 @@ import CardMedia from '@mui/material/CardMedia';
 import Box from '@mui/material/Box';
 
 // @project
-import branding from '@/branding.json';
+import branding from 'src/branding.json';
 
 /***************************  LOGO - ICON  ***************************/
 

@@ -2,7 +2,7 @@
 import * as Tabs from '@mui/material/Tabs';
 
 // @project
-import { TabsType } from '@/enum';
+import { TabsType } from 'src/enum';
 
 declare module '@mui/material/Tabs' {
   interface TabsOwnProps {

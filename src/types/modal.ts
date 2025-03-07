@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 
 // @project
-import { ModalSize } from '@/enum';
+import { ModalSize } from 'src/enum';
 
 export interface ModalHeader {
   title?: string;

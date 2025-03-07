@@ -5,7 +5,7 @@ import { ChipProps } from '@mui/material/Chip';
 
 // @project
 import { DynamicIconProps } from './tabler';
-import { NavActionType } from '@/enum';
+import { NavActionType } from 'src/enum';
 
 export type NavActionProps = {
   type: NavActionType;

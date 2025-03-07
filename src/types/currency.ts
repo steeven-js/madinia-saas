@@ -1,5 +1,5 @@
 // @data
-import { CurrencyType } from '@/data/currencies';
+import { CurrencyType } from 'src/data/currencies';
 
 export interface CurrencyFieldProps {
   defaultCurrency?: string;

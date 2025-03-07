@@ -2,7 +2,7 @@
 import * as Chip from '@mui/material/Chip';
 
 // @project
-import { ChipIconPosition } from '@/enum';
+import { ChipIconPosition } from 'src/enum';
 
 declare module '@mui/material/Chip' {
   interface ChipOwnProps {
