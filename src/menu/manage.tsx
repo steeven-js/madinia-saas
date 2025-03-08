@@ -1,5 +1,6 @@
 // @third-party
 import { FormattedMessage } from 'react-intl';
+import { IconBrandAsana, IconLayoutGrid, IconUserCog, IconSettings } from '@tabler/icons-react';
 
 // @project
 import { AuthRole } from '../enum';
@@ -12,7 +13,7 @@ import { NavItemType } from '../types/menu';
 const manage: NavItemType = {
   id: 'group-manage',
   title: 'Gestion',
-  icon: 'IconBrandAsana',
+  icon: <IconBrandAsana size={20} stroke={1.5} />,
   type: 'group',
   children: [
     {
@@ -20,14 +21,14 @@ const manage: NavItemType = {
       title: 'Tableau de bord',
       type: 'item',
       url: '/dashboard/analytics',
-      icon: 'IconLayoutGrid'
+      icon: <IconLayoutGrid size={20} stroke={1.5} />
     },
     {
       id: 'account',
       title: 'Compte',
       type: 'item',
       url: '/account',
-      icon: 'IconUserCog',
+      icon: <IconUserCog size={20} stroke={1.5} />,
       roles: [AuthRole.SUPER_ADMIN]
     },
     {
@@ -35,7 +36,7 @@ const manage: NavItemType = {
       title: 'Paramètres',
       type: 'item',
       url: '/setting',
-      icon: 'IconSettings',
+      icon: <IconSettings size={20} stroke={1.5} />,
       roles: [AuthRole.SUPER_ADMIN, AuthRole.ADMIN]
     }
   ]

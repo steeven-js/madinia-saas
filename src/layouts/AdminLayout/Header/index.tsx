@@ -11,6 +11,9 @@ import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import Box from '@mui/material/Box';
 
+// @tabler icons
+import { IconMenu2, IconX } from '@tabler/icons-react';
+
 // @project
 import { useAuth } from '../../../contexts/AuthContext';
 
@@ -62,7 +65,7 @@ export default function Header({ open, handleDrawerToggle }: HeaderProps) {
           edge="start"
           sx={{ mr: 2 }}
         >
-          {open ? '≡' : '≡'}
+          {open ? <IconX size={20} stroke={1.5} /> : <IconMenu2 size={20} stroke={1.5} />}
         </IconButton>
         <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
           Madinia Dashboard

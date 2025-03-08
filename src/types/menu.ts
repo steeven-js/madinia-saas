@@ -21,7 +21,7 @@ export type NavItemType = {
   id: string;
   title: string | ReactNode;
   type: 'group' | 'item' | 'collapse';
-  icon?: string;
+  icon?: string | ReactNode;
   url?: string;
   target?: boolean;
   external?: boolean;

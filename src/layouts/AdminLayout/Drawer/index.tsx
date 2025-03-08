@@ -22,12 +22,11 @@ import { NavItemType } from '../../../types/menu';
 // Props
 interface DrawerProps {
   open: boolean;
-  handleDrawerToggle: () => void;
 }
 
 /***************************  DRAWER  ***************************/
 
-export default function Drawer({ open, handleDrawerToggle }: DrawerProps) {
+export default function Drawer({ open }: DrawerProps) {
   const location = useLocation();
   const { userClaims } = useAuth();
   const currentRole = userClaims?.role;
@@ -81,8 +80,14 @@ export default function Drawer({ open, handleDrawerToggle }: DrawerProps) {
               )}
               <ListItemText
                 primary={item.title}
-                sx={{ opacity: open ? 1 : 0 }}
-                primaryTypographyProps={{ noWrap: true }}
+                sx={{ 
+                  opacity: open ? 1 : 0,
+                  '& .MuiTypography-root': { 
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
+                  } 
+                }}
               />
             </ListItemButton>
             <Collapse in={open} timeout="auto" unmountOnExit>
@@ -116,8 +121,14 @@ export default function Drawer({ open, handleDrawerToggle }: DrawerProps) {
               )}
               <ListItemText
                 primary={item.title}
-                sx={{ opacity: open ? 1 : 0 }}
-                primaryTypographyProps={{ noWrap: true }}
+                sx={{ 
+                  opacity: open ? 1 : 0,
+                  '& .MuiTypography-root': { 
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
+                  } 
+                }}
               />
             </ListItemButton>
           </ListItem>

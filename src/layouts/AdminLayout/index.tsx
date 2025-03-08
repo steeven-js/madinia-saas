@@ -26,7 +26,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     <Box sx={{ display: 'flex', minHeight: '100vh' }}>
       <CssBaseline />
       <Header open={open} handleDrawerToggle={handleDrawerToggle} />
-      <Drawer open={open} handleDrawerToggle={handleDrawerToggle} />
+      <Drawer open={open} />
       <Box
         component="main"
         sx={{
