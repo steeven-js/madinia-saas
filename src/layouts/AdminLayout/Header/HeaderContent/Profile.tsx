@@ -26,6 +26,9 @@ import { AuthRole, AvatarSize, ChipIconPosition } from 'src/enum';
 import useConfig from 'src/hooks/useConfig';
 import { useAuth } from 'src/contexts/AuthContext';
 
+// Importer signOut depuis action.ts
+import { signOut } from 'src/auth/context/firebase/action';
+
 // @types
 import { ProfileProps } from 'src/types/profile';
 
@@ -53,7 +56,7 @@ const RoleTitles: Record<AuthRole, string> = {
 export default function ProfileSection() {
   const theme = useTheme();
   const { onChangeThemeMode, onChangeThemeDirection } = useConfig();
-  const { currentUser, userClaims, logout } = useAuth();
+  const { currentUser, userClaims } = useAuth();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [innerAnchorEl, setInnerAnchorEl] = useState<null | HTMLElement>(null);
@@ -91,7 +94,8 @@ export default function ProfileSection() {
   const logoutAccount = async () => {
     setAnchorEl(null);
     try {
-      await logout();
+      // Utiliser signOut au lieu de logout
+      await signOut();
     } catch (error) {
       console.error('Logout failed:', error);
     }

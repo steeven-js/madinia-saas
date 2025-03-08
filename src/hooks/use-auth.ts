@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { auth } from 'src/firebase/config';
-import { useAuth as useAuthContext } from 'src/contexts/AuthContext';
 
 interface UseAuthReturn {
   currentUser: any;
@@ -14,7 +13,7 @@ interface UseAuthReturn {
 }
 
 export function useAuth(): UseAuthReturn {
-  const { currentUser } = useAuthContext();
+  const [currentUser, setCurrentUser] = useState(auth.currentUser);
   const [userRole, setUserRole] = useState<string | null>(null);
   const [userClaims, setUserClaims] = useState<any>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -58,15 +57,20 @@ export function useAuth(): UseAuthReturn {
     }
   };
 
-  // Récupérer les claims au chargement et quand l'utilisateur change
+  // Écouter les changements d'état de l'authentification
   useEffect(() => {
-    if (currentUser) {
-      fetchUserClaims();
-    } else {
-      setUserRole('user');
-      setUserClaims(null);
-    }
-  }, [currentUser]);
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      setCurrentUser(user);
+      if (user) {
+        fetchUserClaims();
+      } else {
+        setUserRole('user');
+        setUserClaims(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   // Déterminer si l'utilisateur est admin ou super-admin
   const isAdmin = userRole === 'admin';
@@ -88,4 +92,4 @@ export function useAuth(): UseAuthReturn {
     refreshUserClaims,
     isRefreshing
   };
-} 
+}

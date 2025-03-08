@@ -26,7 +26,6 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
-  refreshUserClaims: () => Promise<void>;
 }
 
 // Créer le contexte
@@ -96,13 +95,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     */
   }
 
-  // Fonction pour rafraîchir les claims
-  async function refreshUserClaims() {
-    if (currentUser) {
-      await fetchUserClaims(currentUser);
-    }
-  }
-
   // Fonction pour s'inscrire
   async function signup(email: string, password: string) {
     await createUserWithEmailAndPassword(auth, email, password);
@@ -151,7 +143,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     login,
     logout,
     resetPassword,
-    refreshUserClaims
   };
 
   return (

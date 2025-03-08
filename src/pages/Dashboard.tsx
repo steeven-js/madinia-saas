@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { auth } from 'src/firebase/config';
+import { refreshUserClaims } from 'src/auth/context/firebase/action';
 
 export default function Dashboard() {
-  const { currentUser, refreshUserClaims } = useAuth();
+  const { currentUser } = useAuth();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [userClaims, setUserClaims] = useState<any>(null);
   const [displayRole, setDisplayRole] = useState('');
@@ -11,19 +11,12 @@ export default function Dashboard() {
   // Fonction pour récupérer les claims directement depuis Firebase
   const fetchFirebaseClaims = async () => {
     try {
-      const user = auth.currentUser;
-      if (user) {
-        // Forcer le rafraîchissement du token pour obtenir les dernières claims
-        await user.getIdToken(true);
-        
-        // Récupérer le token ID qui contient les claims
-        const idTokenResult = await user.getIdTokenResult();
-        console.log('Claims Firebase:', idTokenResult.claims);
-        
-        setUserClaims(idTokenResult.claims);
+      const claims = await refreshUserClaims();
+      if (claims) {
+        setUserClaims(claims);
         
         // Définir le rôle à afficher
-        const role = idTokenResult.claims.role;
+        const role = claims.role;
         if (role === 'admin') {
           setDisplayRole('administrateur');
         } else if (role === 'super-admin') {
@@ -40,15 +33,13 @@ export default function Dashboard() {
   // Rafraîchir les claims au chargement du composant
   useEffect(() => {
     fetchFirebaseClaims();
-    refreshUserClaims();
-  }, [refreshUserClaims]);
+  }, []);
 
   // Fonction pour rafraîchir manuellement les claims
   const handleRefreshClaims = async () => {
     setIsRefreshing(true);
     try {
       await fetchFirebaseClaims();
-      await refreshUserClaims();
       console.log("Claims rafraîchies avec succès");
     } catch (error) {
       console.error("Erreur lors du rafraîchissement des claims:", error);

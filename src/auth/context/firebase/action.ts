@@ -114,3 +114,28 @@ export const signOut = async () => {
 export const sendPasswordResetEmail = async ({ email }: { email: string }) => {
   await _sendPasswordResetEmail(auth, email);
 };
+
+/** **************************************
+ * User Claims
+ *************************************** */
+export const refreshUserClaims = async () => {
+  try {
+    const user = auth.currentUser;
+    if (!user) {
+      console.log("Aucun utilisateur connecté");
+      return null;
+    }
+    
+    // Forcer le rafraîchissement du token pour obtenir les dernières claims
+    await user.getIdToken(true);
+    
+    // Récupérer le token ID qui contient les claims
+    const idTokenResult = await user.getIdTokenResult();
+    console.log("Token claims:", idTokenResult.claims);
+    
+    return idTokenResult.claims;
+  } catch (error) {
+    console.error("Erreur lors de la récupération des claims:", error);
+    throw error;
+  }
+};
