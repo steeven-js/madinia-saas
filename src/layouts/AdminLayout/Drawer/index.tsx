@@ -1,104 +1,47 @@
-import { useLocation } from 'react-router-dom';
 import { useMemo } from 'react';
 
 // @mui
-import MuiDrawer from '@mui/material/Drawer';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Divider from '@mui/material/Divider';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import { useTheme } from '@mui/material/styles';
+import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import Divider from '@mui/material/Divider';
+import Drawer from '@mui/material/Drawer';
+import Box from '@mui/material/Box';
 
 // @project
-import DrawerContent from './DrawerContent';
 import DrawerHeader from './DrawerHeader';
+import DrawerContent from './DrawerContent';
 import MiniDrawerStyled from './MiniDrawerStyled';
-import { useAuth } from 'src/contexts/AuthContext';
+
+import { handlerDrawerOpen, useGetMenuMaster } from 'src/states/menu';
 import { DRAWER_WIDTH } from 'src/config';
 
-// @types
-import { NavItemType } from 'src/types/menu';
-
-// Props
-interface DrawerProps {
-  open: boolean;
+interface Props {
   window?: () => Window;
 }
 
 /***************************  ADMIN LAYOUT - DRAWER  ***************************/
 
-export default function Drawer({ open, window }: DrawerProps) {
-  const theme = useTheme();
-  const downLG = useMediaQuery(theme.breakpoints.down('lg'));
-  const location = useLocation();
-  const { userClaims } = useAuth();
+export default function MainDrawer({ window }: Props) {
+  const { menuMaster } = useGetMenuMaster();
+  const drawerOpen = menuMaster.isDashboardDrawerOpened;
+  const downLG = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
 
   // Define container for drawer when window is specified
   const container = window !== undefined ? () => window().document.body : undefined;
 
-  // Render menu items based on user role
-  const renderNavItems = (items: NavItemType[] = []) => {
-    return items.map((item) => {
-      // Check if item has roles and if user has required role
-      if (item.roles?.length && userClaims?.role && !item.roles.includes(userClaims.role)) {
-        return null;
-      }
-
-      // Render based on item type
-      switch (item.type) {
-        case 'group':
-          return (
-            <List key={item.id} subheader={item.title && <Typography variant="caption">{item.title}</Typography>}>
-              {item.children && renderNavItems(item.children)}
-            </List>
-          );
-        case 'collapse':
-          return (
-            <ListItem key={item.id} disablePadding>
-              <ListItemButton selected={location.pathname.includes(item.id!)}>
-                {item.icon && <ListItemIcon>{typeof item.icon === 'string' ? null : item.icon}</ListItemIcon>}
-                <ListItemText primary={item.title} />
-              </ListItemButton>
-            </ListItem>
-          );
-        case 'item':
-          return (
-            <ListItem key={item.id} disablePadding>
-              <ListItemButton
-                selected={location.pathname === item.url}
-                component="a"
-                href={item.url}
-                target={item.target ? '_blank' : undefined}
-              >
-                {item.icon && <ListItemIcon>{typeof item.icon === 'string' ? null : item.icon}</ListItemIcon>}
-                <ListItemText primary={item.title} />
-              </ListItemButton>
-            </ListItem>
-          );
-        default:
-          return null;
-      }
-    });
-  };
-
   // Memoize drawer content and header to prevent unnecessary re-renders
-  const drawerContent = useMemo(() => <DrawerContent open={open} />, [open]);
-  const drawerHeader = useMemo(() => <DrawerHeader open={open} />, [open]);
+  const drawerContent = useMemo(() => <DrawerContent />, []);
+  const drawerHeader = useMemo(() => <DrawerHeader open={drawerOpen} />, [drawerOpen]);
 
   return (
     <Box component="nav" sx={{ flexShrink: { md: 0 }, zIndex: 1200 }} aria-label="mailbox folders">
       {downLG ? (
         // Temporary drawer for smaller screens
-        <MuiDrawer
+        <Drawer
           container={container}
           variant="temporary"
-          open={open}
-          ModalProps={{ keepMounted: true }}
+          open={drawerOpen}
+          onClose={() => handlerDrawerOpen(!drawerOpen)}
           PaperProps={{
             sx: {
               boxSizing: 'border-box',
@@ -109,15 +52,17 @@ export default function Drawer({ open, window }: DrawerProps) {
               boxShadow: 'inherit'
             }
           }}
-          sx={{ display: { xs: 'block', lg: 'none' } }}
+          ModalProps={{ keepMounted: true }}
+          // TODO - Remove this style - not working toggler for resize
+          sx={{ display: { xs: drawerOpen ? 'block' : 'none', lg: 'none', zIndex: 1501 } }}
         >
           {drawerHeader}
           <Divider sx={{ mx: 2 }} />
           {drawerContent}
-        </MuiDrawer>
+        </Drawer>
       ) : (
         // Permanent drawer for larger screens
-        <MiniDrawerStyled variant="permanent" open={open}>
+        <MiniDrawerStyled variant="permanent" open={drawerOpen}>
           {drawerHeader}
           <Divider sx={{ mx: 2 }} />
           {drawerContent}
@@ -125,4 +70,4 @@ export default function Drawer({ open, window }: DrawerProps) {
       )}
     </Box>
   );
-} 
+}

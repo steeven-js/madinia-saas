@@ -1,54 +1,54 @@
 // @mui
 import { styled, Theme, CSSObject } from '@mui/material/styles';
-import MuiDrawer from '@mui/material/Drawer';
+import Drawer from '@mui/material/Drawer';
 
 // @project
 import { DRAWER_WIDTH, MINI_DRAWER_WIDTH } from 'src/config';
 
-// types
-interface MiniDrawerStyledProps {
-  open: boolean;
-  theme: Theme;
-}
+// Mixin for common ) (open/closed) drawer state0....
+const commonDrawerStyles = (theme: Theme) =>
+  ({
+    borderRight: `1px solid ${theme.palette.grey[300]}`,
+    overflowX: 'hidden'
+  }) as CSSObject;
 
-// drawer styled component
-const openedMixin = (theme: Theme): CSSObject => ({
-  width: DRAWER_WIDTH,
-  borderRight: `1px solid ${theme.palette.divider}`,
-  transition: theme.transitions.create('width', {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.enteringScreen
-  }),
-  overflowX: 'hidden',
-  boxShadow: theme.customShadows?.z1
-});
-
-const closedMixin = (theme: Theme): CSSObject => ({
-  transition: theme.transitions.create('width', {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen
-  }),
-  overflowX: 'hidden',
-  width: MINI_DRAWER_WIDTH,
-  borderRight: `1px solid ${theme.palette.divider}`
-});
-
-// mini drawer styled
-const MiniDrawerStyled = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
+// Mixin for opened drawer state
+const openedMixin = (theme: Theme) =>
+  ({
+    ...commonDrawerStyles(theme),
     width: DRAWER_WIDTH,
-    flexShrink: 0,
-    whiteSpace: 'nowrap',
-    boxSizing: 'border-box',
-    ...(open && {
-      ...openedMixin(theme),
-      '& .MuiDrawer-paper': openedMixin(theme)
-    }),
-    ...(!open && {
-      ...closedMixin(theme),
-      '& .MuiDrawer-paper': closedMixin(theme)
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen
     })
-  })
-);
+  }) as CSSObject;
 
-export default MiniDrawerStyled; 
+// Mixin for closed drawer state
+const closedMixin = (theme: Theme) =>
+  ({
+    ...commonDrawerStyles(theme),
+    width: MINI_DRAWER_WIDTH,
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen
+    })
+  }) as CSSObject;
+
+/***************************  DRAWER - MINI STYLED  ***************************/
+
+const MiniDrawerStyled = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open }) => ({
+  width: DRAWER_WIDTH,
+  flexShrink: 0,
+  whiteSpace: 'nowrap',
+  boxSizing: 'border-box',
+  ...(open && {
+    ...openedMixin(theme),
+    '& .MuiDrawer-paper': openedMixin(theme)
+  }),
+  ...(!open && {
+    ...closedMixin(theme),
+    '& .MuiDrawer-paper': closedMixin(theme)
+  })
+}));
+
+export default MiniDrawerStyled;

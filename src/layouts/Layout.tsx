@@ -4,8 +4,7 @@ import { ReactNode } from 'react';
 import { AuthProvider } from '../contexts/AuthContext';
 import AuthGuard from '../utils/route-guard/AuthGuard';
 import RoleGuard from '../utils/route-guard/RoleGuard';
-import AdminLayout from './AdminLayout';
-
+import DashboardLayout from './AdminLayout';
 // Props
 interface LayoutProps {
   children: ReactNode;
@@ -18,7 +17,7 @@ export default function Layout({ children }: LayoutProps) {
     <AuthProvider>
       <AuthGuard>
         <RoleGuard>
-          <AdminLayout>{children}</AdminLayout>
+          <DashboardLayout>{children}</DashboardLayout>
         </RoleGuard>
       </AuthGuard>
     </AuthProvider>

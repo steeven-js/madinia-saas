@@ -11,9 +11,10 @@ import { CustomizationProps } from 'src/types/config';
 // @initial
 const initialState: CustomizationProps = {
   ...defaultConfig,
-  onChangeCurrentTheme: () => {},
-  onChangeThemeDirection: () => {},
-  onChangeThemeMode: () => {}
+  onChangeCurrentTheme: () => { },
+  onChangeThemeDirection: () => { },
+  onChangeThemeMode: () => { },
+  miniDrawer: false
 };
 
 /***************************  CONFIG - CONTEXT & PROVIDER  ***************************/

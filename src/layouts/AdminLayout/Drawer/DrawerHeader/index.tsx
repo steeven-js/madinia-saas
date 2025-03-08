@@ -1,44 +1,39 @@
 // @mui
-import { styled, useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 
 // @project
+import { handlerDrawerOpen, useGetMenuMaster } from 'src/states/menu';
 import Logo from 'src/components/logo';
-import { DRAWER_WIDTH, MINI_DRAWER_WIDTH } from 'src/config';
+
+// @assets
+import { IconLayoutSidebarLeftCollapse, IconLayoutSidebarRightCollapse } from '@tabler/icons-react';
 
 interface Props {
   open: boolean;
 }
 
-// drawer header styled component
-const DrawerHeaderStyled = styled(Box, { shouldForwardProp: (prop) => prop !== 'open' })<Props>(({ theme, open }) => ({
-  ...theme.mixins.toolbar,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: open ? 'flex-start' : 'center',
-  paddingLeft: theme.spacing(open ? 3 : 0),
-  ...(open && {
-    minWidth: DRAWER_WIDTH
-  }),
-  ...(!open && {
-    width: MINI_DRAWER_WIDTH,
-    borderRight: `1px solid ${theme.palette.divider}`
-  })
-}));
-
-/***************************  DRAWER - HEADER  ***************************/
+/***************************  DRAWER HEADER  ***************************/
 
 export default function DrawerHeader({ open }: Props) {
-  const theme = useTheme();
-  const downLG = useMediaQuery(theme.breakpoints.down('lg'));
+  const { menuMaster } = useGetMenuMaster();
+  const drawerOpen = menuMaster.isDashboardDrawerOpened;
 
   return (
-    <DrawerHeaderStyled open={open}>
-      <Stack direction="row" spacing={1} alignItems="center">
-        <Logo isIcon={!open} sx={{ width: open ? 'auto' : 36, height: 36 }} />
+    <Box sx={{ width: 1, px: 2, py: { xs: 2, md: 2.5 } }}>
+      <Stack direction="row" sx={{ alignItems: 'center', justifyContent: open ? 'space-between' : 'center', height: 36 }}>
+        {open && <Logo />}
+        <IconButton
+          aria-label="open drawer"
+          onClick={() => handlerDrawerOpen(!drawerOpen)}
+          size="small"
+          color="secondary"
+          variant="outlined"
+        >
+          {!drawerOpen ? <IconLayoutSidebarRightCollapse size={20} /> : <IconLayoutSidebarLeftCollapse size={20} />}
+        </IconButton>
       </Stack>
-    </DrawerHeaderStyled>
+    </Box>
   );
-} 
+}
