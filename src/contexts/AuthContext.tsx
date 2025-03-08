@@ -9,8 +9,7 @@ import {
   sendPasswordResetEmail
 } from 'firebase/auth';
 
-import { doc, getDoc } from 'firebase/firestore';
-import { auth, db } from '../firebase/config';
+import { auth } from 'src/firebase/config';
 
 // Type pour les custom claims
 interface UserClaims {
@@ -53,8 +52,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [userClaims, setUserClaims] = useState<UserClaims | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Fonction pour récupérer les claims de l'utilisateur
-  async function fetchUserClaims(user: User) {
+  // Fonction pour récupérer les claims de l'utilisateur - désactivée
+  async function fetchUserClaims(_user: User) {
+    // Fonction désactivée
+    console.log("fetchUserClaims est désactivée");
+    setUserClaims(null);
+    
+    // Code original commenté
+    /*
     try {
       console.log("Récupération des claims pour l'utilisateur:", user.uid);
       
@@ -88,6 +93,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       console.error("Erreur lors de la récupération des claims:", error);
       setUserClaims(null);
     }
+    */
   }
 
   // Fonction pour rafraîchir les claims

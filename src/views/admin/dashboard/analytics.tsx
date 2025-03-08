@@ -8,12 +8,12 @@ import CardContent from '@mui/material/CardContent';
 import Box from '@mui/material/Box';
 
 // @project
-import { useAuth } from '../../../contexts/AuthContext';
+import { useAuth } from 'src/hooks/use-auth';
 
 /***************************  DASHBOARD - ANALYTICS  ***************************/
 
 export default function DashboardAnalytics() {
-  const { userClaims, refreshUserClaims } = useAuth();
+  const { displayRole, isAdmin, isSuperAdmin, refreshUserClaims } = useAuth();
 
   useEffect(() => {
     refreshUserClaims();
@@ -25,7 +25,7 @@ export default function DashboardAnalytics() {
         Tableau de bord
       </Typography>
       <Typography variant="body1" color="text.secondary" paragraph>
-        Bienvenue sur votre tableau de bord, {userClaims?.role || 'utilisateur'}.
+        Bienvenue sur votre tableau de bord, {displayRole}.
       </Typography>
 
       <Grid container spacing={3} sx={{ mt: 1 }}>
@@ -86,7 +86,7 @@ export default function DashboardAnalytics() {
           </Card>
         </Grid>
 
-        {userClaims?.role === 'super-admin' && (
+        {isSuperAdmin && (
           <Grid item xs={12}>
             <Card>
               <CardContent>
@@ -101,7 +101,7 @@ export default function DashboardAnalytics() {
           </Grid>
         )}
 
-        {(userClaims?.role === 'super-admin' || userClaims?.role === 'admin') && (
+        {(isSuperAdmin || isAdmin) && (
           <Grid item xs={12}>
             <Card>
               <CardContent>

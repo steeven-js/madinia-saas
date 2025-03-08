@@ -1,12 +1,45 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { auth } from 'src/firebase/config';
 
 export default function Dashboard() {
-  const { currentUser, userClaims, refreshUserClaims } = useAuth();
+  const { currentUser, refreshUserClaims } = useAuth();
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [userClaims, setUserClaims] = useState<any>(null);
+  const [displayRole, setDisplayRole] = useState('');
+
+  // Fonction pour récupérer les claims directement depuis Firebase
+  const fetchFirebaseClaims = async () => {
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        // Forcer le rafraîchissement du token pour obtenir les dernières claims
+        await user.getIdToken(true);
+        
+        // Récupérer le token ID qui contient les claims
+        const idTokenResult = await user.getIdTokenResult();
+        console.log('Claims Firebase:', idTokenResult.claims);
+        
+        setUserClaims(idTokenResult.claims);
+        
+        // Définir le rôle à afficher
+        const role = idTokenResult.claims.role;
+        if (role === 'admin') {
+          setDisplayRole('administrateur');
+        } else if (role === 'super-admin') {
+          setDisplayRole('super administrateur');
+        } else {
+          setDisplayRole('utilisateur');
+        }
+      }
+    } catch (error) {
+      console.error('Erreur lors de la récupération des claims Firebase:', error);
+    }
+  };
 
   // Rafraîchir les claims au chargement du composant
   useEffect(() => {
+    fetchFirebaseClaims();
     refreshUserClaims();
   }, [refreshUserClaims]);
 
@@ -14,6 +47,7 @@ export default function Dashboard() {
   const handleRefreshClaims = async () => {
     setIsRefreshing(true);
     try {
+      await fetchFirebaseClaims();
       await refreshUserClaims();
       console.log("Claims rafraîchies avec succès");
     } catch (error) {
@@ -62,10 +96,10 @@ export default function Dashboard() {
           </div>
           <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">
-              Rôle (Custom Claims)
+              Rôle Firebase
             </dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-              {userClaims?.role || 'Aucun rôle défini'}
+              {userClaims?.role || 'Aucun rôle défini'} ({displayRole})
             </dd>
           </div>
           <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -86,7 +120,7 @@ export default function Dashboard() {
           </div>
           <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">
-              Toutes les Claims
+              Claims Firebase
             </dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
               <pre className="whitespace-pre-wrap">
