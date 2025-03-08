@@ -9,16 +9,25 @@ import {
   sendPasswordResetEmail
 } from 'firebase/auth';
 
-import { auth } from '../firebase/config';
+import { doc, getDoc } from 'firebase/firestore';
+import { auth, db } from '../firebase/config';
+
+// Type pour les custom claims
+interface UserClaims {
+  role?: string;
+  [key: string]: any;
+}
 
 // Définir le type pour le contexte
 interface AuthContextType {
   currentUser: User | null;
+  userClaims: UserClaims | null;
   loading: boolean;
   signup: (email: string, password: string) => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
+  refreshUserClaims: () => Promise<void>;
 }
 
 // Créer le contexte
@@ -41,7 +50,52 @@ interface AuthProviderProps {
 // Provider du contexte
 export function AuthProvider({ children }: AuthProviderProps) {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [userClaims, setUserClaims] = useState<UserClaims | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // Fonction pour récupérer les claims de l'utilisateur
+  async function fetchUserClaims(user: User) {
+    try {
+      console.log("Récupération des claims pour l'utilisateur:", user.uid);
+      
+      // Forcer le rafraîchissement du token pour obtenir les dernières claims
+      await user.getIdToken(true);
+      
+      // Récupérer le token ID qui contient les claims
+      const idTokenResult = await user.getIdTokenResult();
+      console.log("Token claims:", idTokenResult.claims);
+      
+      // Récupérer les données utilisateur de Firestore
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      console.log("Firestore data:", userDoc.exists() ? userDoc.data() : "Document n'existe pas");
+      
+      // Vérifier si le rôle est défini dans les custom claims
+      const role = idTokenResult.claims.role || 
+                  (userDoc.exists() && userDoc.data().role) || 
+                  null;
+      
+      // Combiner les claims du token avec les données Firestore
+      const claims = {
+        ...idTokenResult.claims,
+        ...(userDoc.exists() ? userDoc.data() : {}),
+        // S'assurer que le rôle est défini même s'il n'est pas dans les claims
+        role: role
+      };
+      
+      console.log("Claims finales:", claims);
+      setUserClaims(claims);
+    } catch (error) {
+      console.error("Erreur lors de la récupération des claims:", error);
+      setUserClaims(null);
+    }
+  }
+
+  // Fonction pour rafraîchir les claims
+  async function refreshUserClaims() {
+    if (currentUser) {
+      await fetchUserClaims(currentUser);
+    }
+  }
 
   // Fonction pour s'inscrire
   async function signup(email: string, password: string) {
@@ -56,6 +110,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   // Fonction pour se déconnecter
   async function logout() {
     await signOut(auth);
+    setUserClaims(null);
   }
 
   // Fonction pour réinitialiser le mot de passe
@@ -65,8 +120,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   // Effet pour surveiller l'état de l'authentification
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
+      
+      if (user) {
+        await fetchUserClaims(user);
+      } else {
+        setUserClaims(null);
+      }
+      
       setLoading(false);
     });
 
@@ -77,11 +139,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
   // Valeur du contexte
   const value = {
     currentUser,
+    userClaims,
     loading,
     signup,
     login,
     logout,
-    resetPassword
+    resetPassword,
+    refreshUserClaims
   };
 
   return (
