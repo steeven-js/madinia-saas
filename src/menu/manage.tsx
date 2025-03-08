@@ -1,5 +1,4 @@
 // @third-party
-import { FormattedMessage } from 'react-intl';
 import { IconBrandAsana, IconLayoutGrid, IconUserCog, IconSettings } from '@tabler/icons-react';
 
 // @project

@@ -1,11 +1,15 @@
 'use client';
 
+import { forwardRef } from 'react';
+
 // @next
 import NextLink from 'next/link';
 
 // @mui
 import { useTheme, SxProps } from '@mui/material/styles';
 import ButtonBase from '@mui/material/ButtonBase';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 
 // @project
 import LogoMain from './LogoMain';
@@ -20,16 +24,33 @@ interface Props {
   to?: string;
 }
 
-/***************************  MAIN - LOGO  ***************************/
+// @types
+interface LogoProps {
+  isIcon?: boolean;
+  sx?: Record<string, unknown>;
+  [key: string]: any;
+}
 
-export default function LogoSection({ isIcon, sx, to }: Props) {
+/**
+ * Logo Component
+ * Displays either the full logo or just the icon based on the isIcon prop
+ */
+const Logo = forwardRef<HTMLDivElement, LogoProps>(({ isIcon = false, sx, ...others }, ref) => {
   const theme = useTheme();
 
   return (
-    <NextLink href={!to ? APP_DEFAULT_PATH : to} passHref legacyBehavior>
-      <ButtonBase disableRipple sx={{ ...sx, '&:focus-visible': generateFocusStyle(theme.palette.primary.main) }} aria-label="logo">
-        {isIcon ? <LogoIcon /> : <LogoMain />}
-      </ButtonBase>
-    </NextLink>
+    <Box ref={ref} sx={{ display: 'flex', alignItems: 'center', ...sx }} {...others}>
+      {isIcon ? (
+        <LogoIcon />
+      ) : (
+        <LogoMain />
+      )}
+    </Box>
   );
-}
+});
+
+Logo.displayName = 'Logo';
+
+/***************************  MAIN - LOGO  ***************************/
+
+export default Logo;

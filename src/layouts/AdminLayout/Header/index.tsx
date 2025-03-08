@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { ReactNode, useMemo, useState } from 'react';
 
 // @mui
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
+import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -11,11 +13,12 @@ import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import Box from '@mui/material/Box';
 
-// @tabler icons
-import { IconMenu2, IconX } from '@tabler/icons-react';
-
 // @project
-import { useAuth } from '../../../contexts/AuthContext';
+import { useAuth } from 'src/contexts/AuthContext';
+import { DRAWER_WIDTH, MINI_DRAWER_WIDTH } from 'src/config';
+
+// @assets
+import { IconMenu2, IconX } from '@tabler/icons-react';
 
 // Props
 interface HeaderProps {
@@ -23,11 +26,13 @@ interface HeaderProps {
   handleDrawerToggle: () => void;
 }
 
-/***************************  HEADER  ***************************/
+/***************************  ADMIN LAYOUT - HEADER  ***************************/
 
 export default function Header({ open, handleDrawerToggle }: HeaderProps) {
   const { currentUser, userClaims, logout } = useAuth();
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+  const theme = useTheme();
+  const downLG = useMediaQuery(theme.breakpoints.down('lg'));
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -38,32 +43,40 @@ export default function Header({ open, handleDrawerToggle }: HeaderProps) {
   };
 
   const handleLogout = async () => {
-    try {
-      await logout();
-    } catch (error) {
-      console.error('Erreur lors de la déconnexion:', error);
-    }
     handleCloseUserMenu();
+    await logout();
   };
 
   return (
     <AppBar
       position="fixed"
+      color="inherit"
+      elevation={0}
       sx={{
-        zIndex: (theme) => theme.zIndex.drawer + 1,
-        transition: (theme) => theme.transitions.create(['width', 'margin'], {
+        borderBottom: `1px solid ${theme.palette.divider}`,
+        zIndex: theme.zIndex.drawer + 1,
+        width: { xs: '100%', lg: open ? `calc(100% - ${DRAWER_WIDTH}px)` : `calc(100% - ${MINI_DRAWER_WIDTH}px)` },
+        transition: theme.transitions.create(['width', 'margin'], {
           easing: theme.transitions.easing.sharp,
           duration: theme.transitions.duration.leavingScreen
+        }),
+        ...(open && {
+          marginLeft: DRAWER_WIDTH,
+          width: `calc(100% - ${DRAWER_WIDTH}px)`,
+          transition: theme.transitions.create(['width', 'margin'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen
+          })
         })
       }}
     >
-      <Toolbar>
+      <Toolbar sx={{ minHeight: { xs: 68, md: 76 } }}>
         <IconButton
-          color="inherit"
+          color="secondary"
           aria-label="open drawer"
-          onClick={handleDrawerToggle}
           edge="start"
-          sx={{ mr: 2 }}
+          onClick={handleDrawerToggle}
+          sx={{ mr: 2, ...(open && { display: 'none' }) }}
         >
           {open ? <IconX size={20} stroke={1.5} /> : <IconMenu2 size={20} stroke={1.5} />}
         </IconButton>

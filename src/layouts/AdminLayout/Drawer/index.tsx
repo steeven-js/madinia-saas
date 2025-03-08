@@ -1,4 +1,5 @@
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { useMemo } from 'react';
 
 // @mui
 import MuiDrawer from '@mui/material/Drawer';
@@ -7,163 +8,121 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import Collapse from '@mui/material/Collapse';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 // @project
-import menuItems from '../../../menu';
-import { useAuth } from '../../../contexts/AuthContext';
+import DrawerContent from './DrawerContent';
+import DrawerHeader from './DrawerHeader';
+import MiniDrawerStyled from './MiniDrawerStyled';
+import { useAuth } from 'src/contexts/AuthContext';
+import { DRAWER_WIDTH } from 'src/config';
 
 // @types
-import { NavItemType } from '../../../types/menu';
+import { NavItemType } from 'src/types/menu';
 
 // Props
 interface DrawerProps {
   open: boolean;
+  window?: () => Window;
 }
 
-/***************************  DRAWER  ***************************/
+/***************************  ADMIN LAYOUT - DRAWER  ***************************/
 
-export default function Drawer({ open }: DrawerProps) {
+export default function Drawer({ open, window }: DrawerProps) {
+  const theme = useTheme();
+  const downLG = useMediaQuery(theme.breakpoints.down('lg'));
   const location = useLocation();
   const { userClaims } = useAuth();
-  const currentRole = userClaims?.role;
 
+  // Define container for drawer when window is specified
+  const container = window !== undefined ? () => window().document.body : undefined;
+
+  // Render menu items based on user role
   const renderNavItems = (items: NavItemType[] = []) => {
     return items.map((item) => {
-      // Vérifier si l'élément a des restrictions de rôle
-      if (item.roles && currentRole && !item.roles.includes(currentRole)) {
+      // Check if item has roles and if user has required role
+      if (item.roles?.length && userClaims?.role && !item.roles.includes(userClaims.role)) {
         return null;
       }
 
-      // Élément de groupe
-      if (item.type === 'group' && item.children) {
-        return (
-          <Box key={item.id} sx={{ mb: 1.5 }}>
-            <Typography
-              variant="subtitle2"
-              sx={{
-                px: 3,
-                py: 1.5,
-                color: 'text.secondary',
-                fontWeight: 500,
-                textTransform: 'uppercase',
-                fontSize: '0.75rem'
-              }}
-            >
-              {item.title}
-            </Typography>
-            <List disablePadding>{renderNavItems(item.children)}</List>
-          </Box>
-        );
+      // Render based on item type
+      switch (item.type) {
+        case 'group':
+          return (
+            <List key={item.id} subheader={item.title && <Typography variant="caption">{item.title}</Typography>}>
+              {item.children && renderNavItems(item.children)}
+            </List>
+          );
+        case 'collapse':
+          return (
+            <ListItem key={item.id} disablePadding>
+              <ListItemButton selected={location.pathname.includes(item.id!)}>
+                {item.icon && <ListItemIcon>{typeof item.icon === 'string' ? null : item.icon}</ListItemIcon>}
+                <ListItemText primary={item.title} />
+              </ListItemButton>
+            </ListItem>
+          );
+        case 'item':
+          return (
+            <ListItem key={item.id} disablePadding>
+              <ListItemButton
+                selected={location.pathname === item.url}
+                component="a"
+                href={item.url}
+                target={item.target ? '_blank' : undefined}
+              >
+                {item.icon && <ListItemIcon>{typeof item.icon === 'string' ? null : item.icon}</ListItemIcon>}
+                <ListItemText primary={item.title} />
+              </ListItemButton>
+            </ListItem>
+          );
+        default:
+          return null;
       }
-
-      // Élément de collapse
-      if (item.type === 'collapse' && item.children) {
-        const isActive = location.pathname.includes(item.url || '');
-        return (
-          <ListItem key={item.id} disablePadding sx={{ display: 'block' }}>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                px: 2.5,
-                py: 1,
-                bgcolor: isActive ? 'action.selected' : 'transparent'
-              }}
-            >
-              {item.icon && (
-                <ListItemIcon sx={{ minWidth: 0, mr: 2, justifyContent: 'center' }}>
-                  {item.icon}
-                </ListItemIcon>
-              )}
-              <ListItemText
-                primary={item.title}
-                sx={{ 
-                  opacity: open ? 1 : 0,
-                  '& .MuiTypography-root': { 
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis'
-                  } 
-                }}
-              />
-            </ListItemButton>
-            <Collapse in={open} timeout="auto" unmountOnExit>
-              <List component="div" disablePadding sx={{ pl: 3 }}>
-                {renderNavItems(item.children)}
-              </List>
-            </Collapse>
-          </ListItem>
-        );
-      }
-
-      // Élément simple
-      if (item.type === 'item') {
-        const isActive = location.pathname === item.url;
-        return (
-          <ListItem key={item.id} disablePadding sx={{ display: 'block' }}>
-            <ListItemButton
-              component={Link}
-              to={item.url || '#'}
-              sx={{
-                minHeight: 48,
-                px: 2.5,
-                py: 1,
-                bgcolor: isActive ? 'action.selected' : 'transparent'
-              }}
-            >
-              {item.icon && (
-                <ListItemIcon sx={{ minWidth: 0, mr: 2, justifyContent: 'center' }}>
-                  {item.icon}
-                </ListItemIcon>
-              )}
-              <ListItemText
-                primary={item.title}
-                sx={{ 
-                  opacity: open ? 1 : 0,
-                  '& .MuiTypography-root': { 
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis'
-                  } 
-                }}
-              />
-            </ListItemButton>
-          </ListItem>
-        );
-      }
-
-      return null;
     });
   };
 
+  // Memoize drawer content and header to prevent unnecessary re-renders
+  const drawerContent = useMemo(() => <DrawerContent open={open} />, [open]);
+  const drawerHeader = useMemo(() => <DrawerHeader open={open} />, [open]);
+
   return (
-    <MuiDrawer
-      variant="permanent"
-      open={open}
-      sx={{
-        width: open ? 240 : 64,
-        flexShrink: 0,
-        whiteSpace: 'nowrap',
-        boxSizing: 'border-box',
-        '& .MuiDrawer-paper': {
-          width: open ? 240 : 64,
-          overflowX: 'hidden',
-          transition: (theme) =>
-            theme.transitions.create('width', {
-              easing: theme.transitions.easing.sharp,
-              duration: theme.transitions.duration.enteringScreen
-            })
-        }
-      }}
-    >
-      <Box sx={{ height: 64 }} /> {/* Espace pour le header */}
-      <Divider />
-      <Box sx={{ overflow: 'auto', mt: 2 }}>
-        {menuItems.items.map((item) => renderNavItems([item]))}
-      </Box>
-    </MuiDrawer>
+    <Box component="nav" sx={{ flexShrink: { md: 0 }, zIndex: 1200 }} aria-label="mailbox folders">
+      {downLG ? (
+        // Temporary drawer for smaller screens
+        <MuiDrawer
+          container={container}
+          variant="temporary"
+          open={open}
+          ModalProps={{ keepMounted: true }}
+          PaperProps={{
+            sx: {
+              boxSizing: 'border-box',
+              width: DRAWER_WIDTH,
+              borderRight: '1px solid',
+              borderRightColor: 'divider',
+              backgroundImage: 'none',
+              boxShadow: 'inherit'
+            }
+          }}
+          sx={{ display: { xs: 'block', lg: 'none' } }}
+        >
+          {drawerHeader}
+          <Divider sx={{ mx: 2 }} />
+          {drawerContent}
+        </MuiDrawer>
+      ) : (
+        // Permanent drawer for larger screens
+        <MiniDrawerStyled variant="permanent" open={open}>
+          {drawerHeader}
+          <Divider sx={{ mx: 2 }} />
+          {drawerContent}
+        </MiniDrawerStyled>
+      )}
+    </Box>
   );
 } 
