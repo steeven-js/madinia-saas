@@ -20,7 +20,7 @@ const dotAnimation = keyframes`
 /***************************  PAGE LOADER  ***************************/
 
 export default function PageLoader() {
-  const commonProps: CircularProgressProps = { disableShrink: true, size: 100, variant: 'determinate', thickness: 4, color: 'primary' };
+  const commonProps: CircularProgressProps = { size: 100, variant: 'determinate', thickness: 4, color: 'primary' };
 
   return (
     <Stack sx={{ height: '100vh', width: 1, alignItems: 'center', justifyContent: 'center' }}>

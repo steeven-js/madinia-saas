@@ -6,7 +6,7 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
 // @project
-import PageLoader from '../../components/PageLoader';
+import { SplashScreen } from '../../components/loading-screen';
 import { useAuth } from '../../contexts/AuthContext';
 import menuItems from '../../menu';
 
@@ -28,60 +28,64 @@ export default function RoleGuard({ children }: RoleGuardProps) {
   const [isProcessing, setIsProcessing] = useState(true);
 
   const { userClaims } = useAuth();
-  const currentRole = userClaims?.role; // 'super-admin', 'admin' ou 'user'
+  const currentRole = userClaims?.role;
 
   useEffect(() => {
-    const findMenuItem = async () => {
-      const matchedItem = await findMenu();
-      setActiveItem(matchedItem);
-      setIsProcessing(false);
-    };
     findMenuItem();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
-  const findMenu = () => {
-    return new Promise<NavItemType | undefined>((resolve) => {
-      for (const menu of menuItems?.items) {
-        if (menu.type === 'group') {
-          const matchedParents = findParentElements(menu.children || [], pathname);
-          if (matchedParents) {
-            resolve(matchedParents[0]); // Get the first matched parent item
-            return;
-          }
-        }
-      }
-      resolve(undefined);
-    });
+  const findMenuItem = async () => {
+    const menuItem = findMenu();
+    setActiveItem(menuItem);
+    setIsProcessing(false);
   };
 
-  const findParentElements = (navItems: NavItemType[], targetUrl: string, parents: NavItemType[] = []): NavItemType[] | null => {
-    for (const item of navItems) {
-      const newParents = [...parents, item];
-
-      if (item.url === targetUrl) {
-        return newParents;
-      }
-
-      if (item.children) {
-        const result = findParentElements(item.children, targetUrl, newParents);
-        if (result) {
-          return result;
+  const findMenu = () => {
+    for (const menu of menuItems.items) {
+      if (menu.type === 'group') {
+        const matchedParents = findParentElements(menu.children || [], pathname);
+        if (matchedParents) {
+          return matchedParents[matchedParents.length - 1];
         }
       }
     }
+    return undefined;
+  };
 
+  const findParentElements = (navItems: NavItemType[], targetUrl: string, parents: NavItemType[] = []): NavItemType[] | null => {
+    for (const navItem of navItems) {
+      const newParents = [...parents, navItem];
+      
+      if (navItem.url === targetUrl) {
+        return newParents;
+      }
+      
+      if (navItem.children) {
+        const childResult = findParentElements(navItem.children, targetUrl, newParents);
+        if (childResult) {
+          return childResult;
+        }
+      }
+    }
     return null;
   };
 
-  if (isProcessing) return <PageLoader />;
+  if (isProcessing) {
+    return <SplashScreen />;
+  }
 
-  if (activeItem?.roles?.length && currentRole && !activeItem.roles.includes(currentRole)) {
+  if (!activeItem) {
+    return <>{children}</>;
+  }
+
+  if (activeItem.roles?.length && currentRole && !activeItem.roles.includes(currentRole)) {
     return (
-      <Container sx={{ textAlign: 'center', py: 5 }}>
-        <Typography variant="h3" sx={{ mb: 2 }}>
+      <Container>
+        <Typography variant="h1" component="h2" gutterBottom>
           Accès refusé
         </Typography>
-        <Typography sx={{ color: 'text.secondary' }}>
+        <Typography variant="body1">
           Vous n'avez pas les permissions nécessaires pour accéder à cette page.
         </Typography>
       </Container>

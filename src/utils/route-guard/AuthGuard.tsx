@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 // @project
 import { useAuth } from '../../contexts/AuthContext';
-import PageLoader from '../../components/PageLoader';
+import { SplashScreen } from '../../components/loading-screen';
 
 // Props
 interface AuthGuardProps {
@@ -26,8 +26,8 @@ export default function AuthGuard({ children }: AuthGuardProps) {
     }
   }, [currentUser, loading, navigate]);
 
-  if (!checked) {
-    return <PageLoader />;
+  if (loading || !checked) {
+    return <SplashScreen />;
   }
 
   return <>{children}</>;
