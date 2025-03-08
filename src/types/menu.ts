@@ -18,24 +18,22 @@ export type NavActionProps = {
 };
 
 export type NavItemType = {
-  breadcrumbs?: boolean;
-  caption?: ReactNode | string;
-  children?: NavItemType[];
-  elements?: NavItemType[];
-  chip?: ChipProps;
-  color?: 'primary' | 'secondary' | 'default' | undefined;
-  disabled?: boolean;
-  external?: boolean;
-  isDropdown?: boolean;
-  icon?: DynamicIconProps['name'];
-  id?: string;
-  search?: string;
+  id: string;
+  title: string | ReactNode;
+  type: 'group' | 'item' | 'collapse';
+  icon?: string;
+  url?: string;
   target?: boolean;
-  title?: ReactNode | string;
-  type?: string;
-  url?: string | undefined;
-  actions?: NavActionProps[];
+  external?: boolean;
+  disabled?: boolean;
   roles?: string[];
+  chip?: {
+    label: string;
+    color: 'default' | 'primary' | 'secondary' | 'error' | 'warning' | 'info' | 'success';
+    size?: 'small' | 'medium';
+    variant?: 'filled' | 'outlined';
+  };
+  children?: NavItemType[];
 };
 
 export type LinkTarget = '_blank' | '_self' | '_parent' | '_top';
