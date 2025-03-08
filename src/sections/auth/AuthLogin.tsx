@@ -60,7 +60,7 @@ export default function AuthLogin({ inputSx }: CommonAuthComponentProps) {
         formState: { errors }
     } = useForm<LoginFormInput>({
         resolver: zodResolver(loginSchema),
-        defaultValues: { email: 'super_admin@saasable.io', password: 'Super@123' }
+        defaultValues: { email: 'super_admin@gmail.com', password: 'password' }
     });
 
     const onSubmit = async (data: LoginFormData) => {
@@ -99,7 +99,7 @@ export default function AuthLogin({ inputSx }: CommonAuthComponentProps) {
                         <InputLabel>Email</InputLabel>
                         <OutlinedInput
                             {...register('email', emailSchema)}
-                            placeholder="example@saasable.io"
+                            placeholder="example@gmail.com"
                             fullWidth
                             error={Boolean(errors.email)}
                             sx={inputSx}
