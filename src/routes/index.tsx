@@ -1,31 +1,49 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
+import { Navigate, useRoutes } from 'react-router-dom';
 
-// @project
-import Layout from 'src/layouts/Layout';
-import DashboardAnalytics from 'src/views/admin/dashboard/analytics';
-import Login from 'src/pages/Login';
-import Dashboard from 'src/pages/Dashboard';
-import Register from 'src/pages/Register';
+// Layouts
+import AuthLayout from 'src/layouts/AuthLayout';
+import GuestLayout from 'src/layouts/GuestLayout';
+
+// Components
+import { SplashScreen } from 'src/components/loading-screen';
+
+// Config
+import { APP_DEFAULT_PATH } from 'src/config';
+
+// Lazy loading des pages
+const Login = lazy(() => import('src/pages/Login'));
+const Register = lazy(() => import('src/pages/Register'));
+const Dashboard = lazy(() => import('src/pages/Dashboard'));
+const DashboardAnalytics = lazy(() => import('src/views/admin/dashboard/analytics'));
 
 /**
  * Toutes les routes de l'application
  */
-export function Router() {
-  return (
-    <Routes>
-      {/* Routes publiques */}
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      
-      {/* Routes protégées */}
-      <Route path="/" element={<Layout><Dashboard /></Layout>} />
-      <Route path="/dashboard" element={<Navigate to="/dashboard/analytics" replace />} />
-      <Route path="/dashboard/analytics" element={<Layout><DashboardAnalytics /></Layout>} />
-      
-      {/* Redirection par défaut */}
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
-  );
-}
+export default function Router() {
+  const routes = useRoutes([
+    // Routes publiques (invités)
+    {
+      element: <GuestLayout />,
+      children: [
+        { path: '/login', element: <Login /> },
+        { path: '/register', element: <Register /> },
+      ],
+    },
 
-export default Router; 
+    // Routes protégées (authentifiées)
+    {
+      element: <AuthLayout />,
+      children: [
+        { path: '/', element: <Navigate to={APP_DEFAULT_PATH} replace /> },
+        { path: '/dashboard', element: <Navigate to={APP_DEFAULT_PATH} replace /> },
+        { path: '/dashboard/analytics', element: <DashboardAnalytics /> },
+      ],
+    },
+
+    // Redirection par défaut
+    { path: '*', element: <Navigate to="/" replace /> },
+  ]);
+
+  return routes;
+} 
