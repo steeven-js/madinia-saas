@@ -1,5 +1,3 @@
-
-
 import { Fragment, MouseEvent, useState } from 'react';
 
 // @mui
@@ -30,6 +28,11 @@ import SimpleBar from 'src/components/third-party/SimpleBar';
 
 // @assets
 import { IconBell, IconCode, IconChevronDown, IconGitBranch, IconNote, IconGps } from '@tabler/icons-react';
+
+// @images
+import avatar1 from '/assets/images/users/avatar-1.png';
+import avatar4 from '/assets/images/users/avatar-4.png';
+import avatar5 from '/assets/images/users/avatar-5.png';
 
 const swing = keyframes`
   20% {
@@ -70,7 +73,7 @@ export default function Notification() {
 
   const [notifications, setNotifications] = useState([
     {
-      avatar: { alt: 'Travis Howard', src: '/assets/images/users/avatar-1.png' },
+      avatar: { alt: 'Travis Howard', src: avatar1 },
       badge: <IconCode size={14} color={theme.palette.text.primary} />,
       title: 'Developer · Add Build In Repo',
       subTitle: 'Brenda Skiles',
@@ -90,7 +93,7 @@ export default function Notification() {
       dateTime: 'Jul 11'
     },
     {
-      avatar: { alt: 'Travis Howard', src: '/assets/images/users/avatar-4.png' },
+      avatar: { alt: 'Travis Howard', src: avatar4 },
       badge: <IconNote size={14} color={theme.palette.text.primary} />,
       title: 'Admin · Submit Document',
       subTitle: 'Salvatore Bogan',
@@ -108,7 +111,7 @@ export default function Notification() {
 
   const [notifications2, setNotifications2] = useState([
     {
-      avatar: { alt: 'Travis Howard', src: '/assets/images/users/avatar-1.png' },
+      avatar: { alt: 'Travis Howard', src: avatar1 },
       badge: <IconCode size={14} color={theme.palette.text.primary} />,
       title: 'Developer · Add Build In Repo',
       subTitle: 'Brenda Skiles',
@@ -122,7 +125,7 @@ export default function Notification() {
       isSeen: true
     },
     {
-      avatar: { alt: 'Alice Smith', src: '/assets/images/users/avatar-5.png' },
+      avatar: { alt: 'Alice Smith', src: avatar5 },
       badge: <IconNote size={14} color={theme.palette.text.primary} />,
       title: 'Admin · Submit Document',
       subTitle: 'Salvatore Bogan',
@@ -130,7 +133,7 @@ export default function Notification() {
       isSeen: true
     },
     {
-      avatar: { alt: 'Travis Howard', src: '/assets/images/users/avatar-1.png' },
+      avatar: { alt: 'Travis Howard', src: avatar1 },
       badge: <IconCode size={14} color={theme.palette.text.primary} />,
       title: 'Developer · Add Build In Repo',
       subTitle: 'Brenda Skiles',
