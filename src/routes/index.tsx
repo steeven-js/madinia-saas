@@ -1,12 +1,9 @@
-import { lazy, Suspense } from 'react';
+import { lazy } from 'react';
 import { Navigate, useRoutes } from 'react-router-dom';
 
 // Layouts
 import AuthLayout from 'src/layouts/AuthLayout';
 import GuestLayout from 'src/layouts/GuestLayout';
-
-// Components
-import { SplashScreen } from 'src/components/loading-screen';
 
 // Config
 import { APP_DEFAULT_PATH } from 'src/config';
@@ -14,7 +11,6 @@ import { APP_DEFAULT_PATH } from 'src/config';
 // Lazy loading des pages
 const Login = lazy(() => import('src/pages/Login'));
 const Register = lazy(() => import('src/pages/Register'));
-const Dashboard = lazy(() => import('src/pages/Dashboard'));
 const DashboardAnalytics = lazy(() => import('src/views/admin/dashboard/analytics'));
 
 /**

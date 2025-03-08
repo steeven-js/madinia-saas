@@ -1,62 +1,46 @@
-import { useEffect, useMemo } from 'react';
-import { m, useAnimation } from 'framer-motion';
-import Box from '@mui/material/Box';
-import { alpha, useTheme } from '@mui/material/styles';
+import './styles.css';
+import NProgress from 'nprogress';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 // ----------------------------------------------------------------------
 
 export default function ProgressBar() {
-  const theme = useTheme();
-  const controls = useAnimation();
+  const location = useLocation();
+  const pathname = location.pathname;
 
-  const progressColors = useMemo(
-    () => ({
-      primary: theme.palette.primary.main,
-      secondary: theme.palette.secondary.main,
-      info: theme.palette.info.main,
-      success: theme.palette.success.main,
-    }),
-    [theme.palette]
-  );
-
-  const baseColor = progressColors.primary;
+  const [mounted, setMounted] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    controls.start({
-      x: '100%',
-      transition: {
-        duration: 2.5,
-        ease: 'easeInOut',
-      },
-    });
-  }, [controls]);
+    setMounted(true);
+  }, []);
 
-  return (
-    <Box
-      component={m.div}
-      initial={{ width: '100%', opacity: 0.8 }}
-      sx={{
-        right: 0,
-        bottom: 0,
-        height: 3,
-        zIndex: 1999,
-        position: 'fixed',
-        width: '100%',
-        transformOrigin: '0%',
-        bgcolor: alpha(baseColor, 0.48),
-      }}
-    >
-      <Box
-        component={m.div}
-        animate={controls}
-        sx={{
-          width: '100%',
-          height: '100%',
-          position: 'absolute',
-          left: 0,
-          bgcolor: baseColor,
-        }}
-      />
-    </Box>
-  );
-} 
+  useEffect(() => {
+    if (!visible) {
+      NProgress.start();
+      setVisible(true);
+    }
+
+    if (visible) {
+      NProgress.done();
+      setVisible(false);
+    }
+
+    if (!visible && mounted) {
+      setVisible(false);
+      NProgress.done();
+    }
+
+    return () => {
+      NProgress.done();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname, mounted]);
+
+  if (!mounted) {
+    return null;
+  }
+
+  return null;
+}

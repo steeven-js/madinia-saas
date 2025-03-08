@@ -8,6 +8,7 @@ const Router = lazy(() => import('src/routes'));
 // Components
 import ProgressBar from 'src/components/progress/ProgressBar';
 import { SplashScreen } from 'src/components/loading-screen';
+import { MotionLazy } from 'src/components/motion-lazy';
 
 /**
  * Composant principal de l'application
@@ -16,11 +17,12 @@ export default function App() {
   return (
     <AuthProvider>
       <ProviderWrapper>
-        <ProgressBar />
-        
-        <Suspense fallback={<SplashScreen />}>
-          <Router />
-        </Suspense>
+        <MotionLazy>
+          <ProgressBar />
+          <Suspense fallback={<SplashScreen />}>
+            <Router />
+          </Suspense>
+        </MotionLazy>
       </ProviderWrapper>
     </AuthProvider>
   );
