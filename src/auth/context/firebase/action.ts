@@ -131,8 +131,9 @@ export const refreshUserClaims = async () => {
     
     // Récupérer le token ID qui contient les claims
     const idTokenResult = await user.getIdTokenResult();
-    console.log("Token claims:", idTokenResult.claims);
     
+    // Utiliser uniquement les claims du token Firebase
+    console.log("Firebase claims:", idTokenResult.claims);
     return idTokenResult.claims;
   } catch (error) {
     console.error("Erreur lors de la récupération des claims:", error);

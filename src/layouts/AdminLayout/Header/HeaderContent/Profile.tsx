@@ -24,7 +24,7 @@ import MainCard from 'src/components/MainCard';
 import Profile from 'src/components/Profile';
 import { AuthRole, AvatarSize, ChipIconPosition } from 'src/enum';
 import useConfig from 'src/hooks/useConfig';
-import { useAuth } from 'src/contexts/AuthContext';
+import { useAuth } from 'src/hooks/use-auth';
 
 // Importer signOut depuis action.ts
 import { signOut } from 'src/auth/context/firebase/action';

@@ -1,51 +1,17 @@
-import { useEffect, useState } from 'react';
-import { useAuth } from '../contexts/AuthContext';
-import { refreshUserClaims } from 'src/auth/context/firebase/action';
+import { useAuth } from 'src/hooks/use-auth';
 
 export default function Dashboard() {
-  const { currentUser } = useAuth();
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const [userClaims, setUserClaims] = useState<any>(null);
-  const [displayRole, setDisplayRole] = useState('');
-
-  // Fonction pour récupérer les claims directement depuis Firebase
-  const fetchFirebaseClaims = async () => {
-    try {
-      const claims = await refreshUserClaims();
-      if (claims) {
-        setUserClaims(claims);
-        
-        // Définir le rôle à afficher
-        const role = claims.role;
-        if (role === 'admin') {
-          setDisplayRole('administrateur');
-        } else if (role === 'super-admin') {
-          setDisplayRole('super administrateur');
-        } else {
-          setDisplayRole('utilisateur');
-        }
-      }
-    } catch (error) {
-      console.error('Erreur lors de la récupération des claims Firebase:', error);
-    }
-  };
-
-  // Rafraîchir les claims au chargement du composant
-  useEffect(() => {
-    fetchFirebaseClaims();
-  }, []);
+  const { 
+    currentUser, 
+    userClaims, 
+    displayRole, 
+    refreshUserClaims, 
+    isRefreshing 
+  } = useAuth();
 
   // Fonction pour rafraîchir manuellement les claims
   const handleRefreshClaims = async () => {
-    setIsRefreshing(true);
-    try {
-      await fetchFirebaseClaims();
-      console.log("Claims rafraîchies avec succès");
-    } catch (error) {
-      console.error("Erreur lors du rafraîchissement des claims:", error);
-    } finally {
-      setIsRefreshing(false);
-    }
+    await refreshUserClaims();
   };
 
   return (

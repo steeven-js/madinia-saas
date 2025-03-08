@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { auth } from 'src/firebase/config';
+import { refreshUserClaims as _refreshUserClaims } from 'src/auth/context/firebase/action';
 
 interface UseAuthReturn {
   currentUser: any;
@@ -21,19 +22,14 @@ export function useAuth(): UseAuthReturn {
   // Fonction pour récupérer les claims directement depuis Firebase
   const fetchUserClaims = async () => {
     try {
-      const user = auth.currentUser;
-      if (user) {
-        // Forcer le rafraîchissement du token pour obtenir les dernières claims
-        await user.getIdToken(true);
-        
-        // Récupérer le token ID qui contient les claims
-        const idTokenResult = await user.getIdTokenResult();
-        console.log('Claims récupérées:', idTokenResult.claims);
+      const claims = await _refreshUserClaims();
+      if (claims) {
+        console.log('Claims récupérées:', claims);
         
         // Récupérer le rôle depuis les claims
-        const role = idTokenResult.claims.role as string;
+        const role = claims.role as string;
         setUserRole(role || 'user');
-        setUserClaims(idTokenResult.claims);
+        setUserClaims(claims);
       } else {
         setUserRole('user');
         setUserClaims(null);
