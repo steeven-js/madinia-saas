@@ -1,10 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useAuth } from "src/contexts/AuthContext";
 import { useAppNavigation } from "src/routes/hooks";
 import { CommonAuthComponentProps } from "src/types/auth";
 import { z } from "zod";
+
+// Importer signUp depuis action.ts
+import { signUp } from "src/auth/context/firebase/action";
 
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
@@ -19,8 +21,11 @@ import Grid from '@mui/material/Grid2';
 // Validation schemas
 const emailSchema = z.string().email('Invalid email');
 const passwordSchema = z.string().min(6, 'Password must be at least 6 characters');
+const nameSchema = z.string().min(2, 'Must be at least 2 characters');
 
 const registerSchema = z.object({
+    firstName: nameSchema,
+    lastName: nameSchema,
     email: emailSchema,
     password: passwordSchema,
     confirmPassword: z.string()
@@ -34,7 +39,6 @@ type RegisterFormData = z.infer<typeof registerSchema>;
 const commonIconProps = { size: 20, stroke: 1.5 };
 
 export default function AuthRegister({ inputSx }: CommonAuthComponentProps) {
-    const { signup } = useAuth();
     const { navigateToDashboard } = useAppNavigation();
     const [registerError, setRegisterError] = useState('');
     const [isProcessing, setIsProcessing] = useState(false);
@@ -44,6 +48,8 @@ export default function AuthRegister({ inputSx }: CommonAuthComponentProps) {
     const { register, handleSubmit, formState: { errors } } = useForm<RegisterFormData>({
         resolver: zodResolver(registerSchema),
         defaultValues: {
+            firstName: '',
+            lastName: '',
             email: '',
             password: '',
             confirmPassword: ''
@@ -54,10 +60,31 @@ export default function AuthRegister({ inputSx }: CommonAuthComponentProps) {
         try {
             setRegisterError('');
             setIsProcessing(true);
-            await signup(data.email, data.password);
+            
+            // Utiliser signUp au lieu de signup
+            await signUp({
+                email: data.email,
+                password: data.password,
+                firstName: data.firstName,
+                lastName: data.lastName
+            });
+            
             navigateToDashboard();
         } catch (err) {
-            setRegisterError('Registration failed. Please try again.');
+            let errorMessage = 'Registration failed. Please try again.';
+            
+            // Gestion plus précise des erreurs Firebase
+            if (err instanceof Error) {
+                if (err.message.includes('email-already-in-use')) {
+                    errorMessage = 'This email is already registered.';
+                } else if (err.message.includes('weak-password')) {
+                    errorMessage = 'Password is too weak.';
+                } else if (err.message.includes('invalid-email')) {
+                    errorMessage = 'Invalid email format.';
+                }
+            }
+            
+            setRegisterError(errorMessage);
             console.error(err);
         } finally {
             setIsProcessing(false);
@@ -67,6 +94,28 @@ export default function AuthRegister({ inputSx }: CommonAuthComponentProps) {
     return (
         <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
             <Grid container rowSpacing={2.5} columnSpacing={1.5}>
+                <Grid size={6}>
+                    <InputLabel>First Name</InputLabel>
+                    <OutlinedInput
+                        {...register('firstName')}
+                        placeholder="John"
+                        fullWidth
+                        error={Boolean(errors.firstName)}
+                        sx={{ ...inputSx }}
+                    />
+                    {errors.firstName?.message && <FormHelperText error>{errors.firstName?.message}</FormHelperText>}
+                </Grid>
+                <Grid size={6}>
+                    <InputLabel>Last Name</InputLabel>
+                    <OutlinedInput
+                        {...register('lastName')}
+                        placeholder="Doe"
+                        fullWidth
+                        error={Boolean(errors.lastName)}
+                        sx={{ ...inputSx }}
+                    />
+                    {errors.lastName?.message && <FormHelperText error>{errors.lastName?.message}</FormHelperText>}
+                </Grid>
                 <Grid size={12}>
                     <InputLabel>Email</InputLabel>
                     <OutlinedInput

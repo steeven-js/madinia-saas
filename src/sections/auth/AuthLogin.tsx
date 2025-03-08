@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useAuth } from 'src/contexts/AuthContext';
 import { useAppNavigation } from 'src/routes/hooks';
 import { Link as RouterLink } from 'react-router-dom';
 // import { PATHS } from 'src/routes/path';
+
+// Importer signInWithPassword depuis action.ts
+import { signInWithPassword } from 'src/auth/context/firebase/action';
 
 import { emailSchema, passwordSchema } from 'src/utils/validationSchema';
 import Alert from '@mui/material/Alert';
@@ -46,7 +48,6 @@ type LoginFormData = z.infer<typeof loginSchema>;
 const commonIconProps = { size: 20, stroke: 1.5 };
 
 export default function AuthLogin({ inputSx }: CommonAuthComponentProps) {
-    const { login } = useAuth();
     const { navigateToDashboard } = useAppNavigation();
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
@@ -67,10 +68,25 @@ export default function AuthLogin({ inputSx }: CommonAuthComponentProps) {
         try {
             setLoginError('');
             setIsProcessing(true);
-            await login(data.email, data.password);
+            
+            await signInWithPassword({ 
+                email: data.email, 
+                password: data.password 
+            });
+            
             navigateToDashboard();
         } catch (err) {
-            setLoginError('Login failed. Please check your credentials.');
+            let errorMessage = 'Login failed. Please check your credentials.';
+            
+            if (err instanceof Error) {
+                if (err.message.includes('user-not-found')) {
+                    errorMessage = 'No account found with this email.';
+                } else if (err.message.includes('wrong-password')) {
+                    errorMessage = 'Invalid password.';
+                }
+            }
+            
+            setLoginError(errorMessage);
             console.error(err);
         } finally {
             setIsProcessing(false);

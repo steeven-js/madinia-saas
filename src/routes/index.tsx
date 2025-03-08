@@ -1,10 +1,11 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 
 // @project
-import Layout from '../layouts/Layout';
-import DashboardAnalytics from '../views/admin/dashboard/analytics';
-import Login from '../pages/Login';
-import Dashboard from '../pages/Dashboard';
+import Layout from 'src/layouts/Layout';
+import DashboardAnalytics from 'src/views/admin/dashboard/analytics';
+import Login from 'src/pages/Login';
+import Dashboard from 'src/pages/Dashboard';
+import Register from 'src/pages/Register';
 
 /**
  * Toutes les routes de l'application
@@ -14,6 +15,7 @@ export function Router() {
     <Routes>
       {/* Routes publiques */}
       <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
       
       {/* Routes protégées */}
       <Route path="/" element={<Layout><Dashboard /></Layout>} />
