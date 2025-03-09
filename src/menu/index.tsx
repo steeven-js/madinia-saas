@@ -2,16 +2,6 @@
 import { NavItemType } from '../types/menu';
 import { AuthRole } from '../enum';
 
-// @assets
-import { 
-  IconDashboard, 
-  IconSettings, 
-  IconUsers, 
-  IconBuildingStore, 
-  IconReportAnalytics,
-  IconLayoutGridAdd
-} from '@tabler/icons-react';
-
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems: { items: NavItemType[] } = {
@@ -119,4 +109,4 @@ const menuItems: { items: NavItemType[] } = {
   ]
 };
 
-export default menuItems; 
+export default menuItems;
