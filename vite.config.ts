@@ -13,10 +13,19 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      'src': path.resolve(__dirname, './src')
+      'src': path.resolve(__dirname, './src'),
+      '@': path.resolve(__dirname, './src')
     }
   },
   define: {
     'process.env': {}
+  },
+  optimizeDeps: {
+    include: ['react-helmet-async']
+  },
+  server: {
+    hmr: {
+      overlay: true
+    }
   }
 })

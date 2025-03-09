@@ -1,6 +1,6 @@
 import { NavigateOptions } from 'react-router-dom';
 
-import { PATHS, PathsType, PRIVATE_PATHS, PUBLIC_PATHS } from './path';
+import { PATHS, PathsType, PRIVATE_PATHS, PUBLIC_PATHS } from 'src/routes/paths';
 
 /**
  * Vérifie si un chemin est une route publique

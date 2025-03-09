@@ -3,6 +3,7 @@ import Locales from 'src/components/Locales';
 import RTLLayout from 'src/components/RTLLayout';
 import { ConfigProvider } from 'src/contexts/ConfigContext';
 import ThemeCustomization from 'src/themes';
+import { HelmetProvider } from 'react-helmet-async';
 
 // @types
 import { ChildrenProps } from 'src/types/root';
@@ -14,7 +15,9 @@ export default function ProviderWrapper({ children }: ChildrenProps) {
     <ConfigProvider>
       <ThemeCustomization>
         <RTLLayout>
-          <Locales>{children}</Locales>
+          <HelmetProvider>
+            <Locales>{children}</Locales>
+          </HelmetProvider>
         </RTLLayout>
       </ThemeCustomization>
     </ConfigProvider>

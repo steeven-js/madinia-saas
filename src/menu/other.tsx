@@ -1,5 +1,4 @@
 // @third-party
-import { FormattedMessage } from 'react-intl';
 import { 
   IconDotsVertical, 
   IconAppWindow, 

@@ -15,7 +15,10 @@ export const PUBLIC_PATHS = {
 export const PRIVATE_PATHS = {
   DASHBOARD: '/dashboard',
   PROFILE: '/profile',
-  SETTINGS: '/settings'
+  SETTINGS: '/settings',
+  PAGE1: '/dashboard/page1',
+  PAGE2: '/dashboard/page2',
+  PAGE3: '/dashboard/page3'
 } as const;
 
 // Tous les chemins

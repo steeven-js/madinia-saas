@@ -5,8 +5,8 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { PATHS } from '../routes/path';
-import { useAuth } from '../contexts/AuthContext';
+import { PATHS } from '../../routes/paths';
+import { useAuth } from '../../contexts/AuthContext';
 
 // Schéma de validation
 const forgotPasswordSchema = z.object({

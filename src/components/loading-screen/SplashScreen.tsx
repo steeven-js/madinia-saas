@@ -1,15 +1,14 @@
 import { m } from 'framer-motion';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import { alpha } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
-import CircularProgress from '@mui/material/CircularProgress';
-
-import LogoMain from 'src/components/logo/LogoMain';
+import { alpha, useTheme } from '@mui/material/styles';
+import LogoIcon from 'src/components/logo/LogoIcon';
 
 // ----------------------------------------------------------------------
 
 export function SplashScreen() {
+  const theme = useTheme();
+
   return (
     <Stack
       sx={{
@@ -22,6 +21,10 @@ export function SplashScreen() {
         alignItems: 'center',
         justifyContent: 'center',
         bgcolor: 'background.paper',
+        backdropFilter: 'blur(8px)',
+        transition: theme.transitions.create(['opacity', 'transform'], {
+          duration: theme.transitions.duration.complex
+        })
       }}
     >
       <m.div
@@ -36,7 +39,7 @@ export function SplashScreen() {
           repeat: Infinity,
         }}
       >
-        <LogoMain />
+        <LogoIcon />
       </m.div>
 
       <Box
@@ -49,10 +52,11 @@ export function SplashScreen() {
         }}
         transition={{ ease: 'linear', duration: 3.2, repeat: Infinity }}
         sx={{
-          width: 100,
-          height: 100,
+          width: { xs: 80, md: 100 },
+          height: { xs: 80, md: 100 },
           position: 'absolute',
           border: (theme) => `solid 3px ${alpha(theme.palette.primary.main, 0.24)}`,
+          boxShadow: (theme) => `0 0 20px ${alpha(theme.palette.primary.main, 0.24)}`
         }}
       />
 
@@ -70,17 +74,13 @@ export function SplashScreen() {
           repeat: Infinity,
         }}
         sx={{
-          width: 120,
-          height: 120,
+          width: { xs: 100, md: 120 },
+          height: { xs: 100, md: 120 },
           position: 'absolute',
           border: (theme) => `solid 8px ${alpha(theme.palette.primary.main, 0.24)}`,
+          boxShadow: (theme) => `0 0 20px ${alpha(theme.palette.primary.main, 0.24)}`
         }}
       />
-
-      <Stack spacing={2} sx={{ mt: 5, textAlign: 'center' }}>
-        <Typography variant="h6">Chargement...</Typography>
-        <CircularProgress />
-      </Stack>
     </Stack>
   );
-} 
+}

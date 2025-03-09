@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useAppNavigation } from "src/routes/hooks";
+import { useAppNavigation } from "src/routes/hooks/hooks";
 import { CommonAuthComponentProps } from "src/types/auth";
 import { z } from "zod";
 

@@ -1,29 +1,58 @@
-import React from 'react';
+// @mui
+import { useTheme } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
+
+// @project
+import LogoIcon from './logo/LogoIcon';
 
 interface LoadingSpinnerProps {
-  size?: 'sm' | 'md' | 'lg';
-  color?: string;
+  size?: 'small' | 'medium' | 'large';
 }
 
 /**
- * Composant d'indicateur de chargement
+ * Composant d'indicateur de chargement avec logo
  */
 export default function LoadingSpinner({ 
-  size = 'md', 
-  color = 'text-indigo-600' 
+  size = 'medium'
 }: LoadingSpinnerProps) {
-  const sizeClasses = {
-    sm: 'w-6 h-6',
-    md: 'w-10 h-10',
-    lg: 'w-16 h-16'
+  const theme = useTheme();
+  
+  const spinnerSizes = {
+    small: 40,
+    medium: 60, 
+    large: 80
   };
 
   return (
-    <div className="flex items-center justify-center h-screen">
-      <div className="flex flex-col items-center">
-        <div className={`animate-spin rounded-full border-t-2 border-b-2 ${color} ${sizeClasses[size]}`}></div>
-        <p className="mt-4 text-gray-700 font-medium">Chargement...</p>
-      </div>
-    </div>
+    <Box 
+      sx={{
+        height: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
+    >
+      <Box sx={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <Box sx={{ position: 'relative' }}>
+          <CircularProgress
+            size={spinnerSizes[size]}
+            sx={{
+              color: theme.palette.primary.main
+            }}
+          />
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)'
+            }}
+          >
+            <LogoIcon />
+          </Box>
+        </Box>
+      </Box>
+    </Box>
   );
-} 
+}

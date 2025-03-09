@@ -1,11 +1,16 @@
-import React from 'react';
-
 // @project
 import { NavItemType } from '../types/menu';
 import { AuthRole } from '../enum';
 
 // @assets
-import { IconDashboard, IconSettings, IconUsers, IconBuildingStore, IconReportAnalytics } from '@tabler/icons-react';
+import { 
+  IconDashboard, 
+  IconSettings, 
+  IconUsers, 
+  IconBuildingStore, 
+  IconReportAnalytics,
+  IconLayoutGridAdd
+} from '@tabler/icons-react';
 
 // ==============================|| MENU ITEMS ||============================== //
 
@@ -21,29 +26,53 @@ const menuItems: { items: NavItemType[] } = {
           title: 'Dashboard',
           type: 'item',
           url: '/dashboard',
-          icon: <IconDashboard size={20} stroke={1.5} />,
+          icon: 'IconDashboard',
           roles: [AuthRole.SUPER_ADMIN, AuthRole.ADMIN, AuthRole.USER]
         }
       ]
     },
     {
-      id: 'management',
-      title: 'Management',
+      id: 'pages',
+      title: 'Pages',
       type: 'group',
       children: [
+        {
+          id: 'page1',
+          title: 'Page 1',
+          type: 'item',
+          url: '/dashboard/page1',
+          icon: 'IconLayoutGridAdd',
+          roles: [AuthRole.SUPER_ADMIN, AuthRole.ADMIN, AuthRole.USER]
+        },
+        {
+          id: 'page2',
+          title: 'Page 2',
+          type: 'item',
+          url: '/dashboard/page2',
+          icon: 'IconLayoutGridAdd',
+          roles: [AuthRole.SUPER_ADMIN, AuthRole.ADMIN, AuthRole.USER]
+        },
+        {
+          id: 'page3',
+          title: 'Page 3',
+          type: 'item',
+          url: '/dashboard/page3',
+          icon: 'IconLayoutGridAdd',
+          roles: [AuthRole.SUPER_ADMIN, AuthRole.ADMIN, AuthRole.USER]
+        },
         {
           id: 'users',
           title: 'Users',
           type: 'item',
           url: '/users',
-          icon: <IconUsers size={20} stroke={1.5} />,
+          icon: 'IconUsers',
           roles: [AuthRole.SUPER_ADMIN, AuthRole.ADMIN]
         },
         {
           id: 'products',
           title: 'Products',
           type: 'collapse',
-          icon: <IconBuildingStore size={20} stroke={1.5} />,
+          icon: 'IconBuildingStore',
           roles: [AuthRole.SUPER_ADMIN, AuthRole.ADMIN],
           children: [
             {
@@ -67,7 +96,7 @@ const menuItems: { items: NavItemType[] } = {
           title: 'Reports',
           type: 'item',
           url: '/reports',
-          icon: <IconReportAnalytics size={20} stroke={1.5} />,
+          icon: 'IconReportAnalytics',
           roles: [AuthRole.SUPER_ADMIN, AuthRole.ADMIN]
         }
       ]
@@ -82,7 +111,7 @@ const menuItems: { items: NavItemType[] } = {
           title: 'Settings',
           type: 'item',
           url: '/settings',
-          icon: <IconSettings size={20} stroke={1.5} />,
+          icon: 'IconSettings',
           roles: [AuthRole.SUPER_ADMIN, AuthRole.ADMIN, AuthRole.USER]
         }
       ]

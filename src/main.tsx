@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 
 import './index.css'
 
-import LoadingSpinner from 'src/components/LoadingSpinner'
+import { SplashScreen } from 'src/components/loading-screen'
 
 import App from './App'
 
@@ -14,7 +14,7 @@ const root = createRoot(document.getElementById('root')!)
 root.render(
   <StrictMode>
     <BrowserRouter>
-      <Suspense fallback={<LoadingSpinner size="lg" />}>
+      <Suspense fallback={<SplashScreen />}>
         <App />
       </Suspense>
     </BrowserRouter>

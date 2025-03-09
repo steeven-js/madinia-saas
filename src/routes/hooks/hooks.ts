@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-import { PATHS, PathsType } from './path';
-import { buildRedirectOptions, RedirectOptions } from './utils';
+import { PATHS, PathsType } from 'src/routes/paths';
+import { buildRedirectOptions, RedirectOptions } from 'src/routes/utils/utils';
 
 /**
  * Hook personnalisé pour la navigation dans l'application
